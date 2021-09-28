@@ -1,18 +1,29 @@
-# outher_world = ['city', 'fields', 'hills', 'plains', 'wood', 'plains', 'tavern', 'city', 'fields', 'hills', 'plains',
-#                 'wood', 'plains', 'tavern']
+from database import Character, db
 
 
-class Character():
+class Char(Character):
     def __init__(self):
+        self.title = ''
+        Character.title = self.title
         self.strenght = 0
+        Character.strenght = self.strenght
         self.craft = 0
+        Character.craft = self.craft
         self.gold = 0
+        Character.gold = self.gold
         self.fate = 0
+        Character.fate = self.fate
         self.life = 4
+        Character.life = self.life
         self.spells = 0
+        Character.spells = self.spells
         self.max_items = 4
-        self.start_place = 0
+        self.start_position = ''
+        Character.start_position = self.start_position
         self.aligment = 'neutral'
+        Character.aligment = self.aligment
+        self.craft_fighting = False
+        Character.craft_fighting = self.craft_fighting
 
     def small_wizz(self):
         self.spells = 1
@@ -23,30 +34,35 @@ class Character():
     def craft_attack(self):
         pass
 
+    def can_fight_craft(self):
+        self.craft_fighting = True
 
-class Warrior(Character):
+
+class Warrior(Char):
     def __init__(self):
         super().__init__()
+        self.title = 'warrior'
         self.strenght = 4
         self.craft = 2
         self.fate = 1
         self.life = 5
-        self.start_place = 'tavern'
+        self.start_position = 'tavern'
 
     def twohanded(self):
-        pass
+        print('use two weapons')
 
     def lucky_figher(self):
         pass
 
 
-class Thiev(Character):
+class Thiev(Char):
     def __init__(self):
         super().__init__()
+        self.title = 'thiev'
         self.strenght = 3
         self.craft = 3
         self.fate = 2
-        self.start_place = 'city'
+        self.start_position = 'city'
 
     def steal_char(self):
         pass
@@ -55,34 +71,13 @@ class Thiev(Character):
         pass
 
 
-def choose_player():
-    pass
+classes = [Warrior(), Thiev()]
 
-def move():
-    if 'there are anothers players?':
-        if 'yes':
-            if 'do you want to meet him ?':
-                if 'yes':
-                    if 'attack of special ability?':
-                        if 'choose gifht style might or magic':
-                            if 'normal':
-                                'normal fight()'
-                                'end turn()'
-                            else:
-                                'magic fight()'
-                                'end turn()'
-                    else:
-                        'use special ability on player()'
-                    'end turn()'
-    'ecounter the space()'
-    if 'card to draw?':
-        if 'yes':
-            'draw a card()'
-            'card ecounter()'
-        else:
-            'card ecounter()'
-    else:
-        'follow instruction on space()'
+# db.create_all()
+# db.session.add(Thiev())
+# db.session.add(Warrior())
+# db.session.commit()
+
 
 # def turn():
 #     if 'player has spells, to cast before movement':
