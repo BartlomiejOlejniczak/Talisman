@@ -8,6 +8,7 @@ class Player():
     def __init__(self):
         self.character = self.choose_character_random()
         self.position = self.character.start_position
+        self.current_player = ''
 
     def choose_character_random(self):
         char = random.choice(classes)
