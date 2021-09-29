@@ -1,4 +1,4 @@
-from database import Character, db
+from database import Character
 
 
 class Char(Character):

@@ -3,16 +3,17 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Table, Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
-# from poszukiwacze import *
-
-Base = declarative_base()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 
+
+Base = declarative_base()
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///talisman.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+
+
 
 class Outer_world(db.Model, Base):
     __tablename__ = 'outer_world'

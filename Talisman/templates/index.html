@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Talisman Game</title>
+</head>
+<body>
+<form method="post">
+    {% if game_phase == 0 %}
+    <input type="submit" name='choose_char' value=' get random character' />
+    {% endif %}
+    {% if game_phase == 1 %}
+    <input type="submit" name='move' value='move' />
+    {% endif %}
+</form>
+<div>
+    <p>game phase: {{ game_phase }}</p>
+    <p>player1 character title: {{ name }}</p>
+    <p>player1 position: {{ position }}</p>
+</div>
+
+<div>
+
+</div>
+</body>
+</html>
