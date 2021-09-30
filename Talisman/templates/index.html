@@ -15,6 +15,10 @@
     {% if game_phase == 1 %}
     <input type="submit" name='move' value='move' />
     {% endif %}
+    {% if game_phase == 2 %}
+    <input type="submit" name='forward' value='move forward' />
+    <input type="submit" name='backward' value='move backward' />
+    {% endif %}
 </form>
 <div>
     <p>game phase: {{ game_phase }}</p>
