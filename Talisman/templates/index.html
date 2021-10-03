@@ -1,12 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>Talisman Game</title>
-</head>
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="utf-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
+<!--    <meta name="description" content="">-->
+<!--    <meta name="author" content="">-->
+<!--    <title>Talisman Game</title>-->
+<!--</head>-->
+{% include "header.html" %}
+
 <body>
 <form method="post">
     {% if game_phase == 3 %}
@@ -39,8 +41,8 @@
 </form>
 <div>
     <p>game phase: {{ game_phase }}</p>
-    <p>player1 character title: {{ name }}</p>
-    <p>player1 position: {{ position }}</p>
+    <p>current_player title: {{ name }}</p>
+    <p>current_player position: {{ position }}</p>
 </div>
 
 <div>

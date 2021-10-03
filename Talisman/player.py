@@ -9,8 +9,11 @@ class Player():
     def __init__(self):
         self.character = ''
         self.position = ''
+        self.name = ''
         # self.current_player = ''
         # self.throw = ''
+
+
 
     def choose_character_random(self):
         char = random.choice(classes)
