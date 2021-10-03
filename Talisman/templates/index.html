@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-     <meta charset="utf-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -9,15 +9,32 @@
 </head>
 <body>
 <form method="post">
-    {% if game_phase == 0 %}
-    <input type="submit" name='choose_char' value=' get random character' />
+    {% if game_phase == 3 %}
+
+    <input type="submit" name='choose_char' value=' get random character'/>
+    {% endif %}
+    {% if game_phase == 'how_many_players' %}
+    <p>How many players?</p>
+    <!--    <input type="submit" name='1' value=' 1 player' />-->
+    <!--    <input type="submit" name='2' value=' 2 players' />-->
+    <!--    <input type="submit" name='3' value=' 3 players' />-->
+    <!--    <input type="submit" name='4' value=' 4 players' />-->
+    <!--    <input type="submit" name='5' value=' 5 players' />-->
+    <!--    <input type="submit" name='6' value=' 6 players' />-->
+
+    <input type="submit" name='p' value='1'/>
+    <input type="submit" name='p' value='2'/>
+    <input type="submit" name='p' value='3'/>
+    <input type="submit" name='p' value='4'/>
+    <input type="submit" name='p' value='5'/>
+    <input type="submit" name='p' value='6'/>
     {% endif %}
     {% if game_phase == 1 %}
-    <input type="submit" name='move' value='move' />
+    <input type="submit" name='move' value='move'/>
     {% endif %}
     {% if game_phase == 2 %}
-    <input type="submit" name='forward' value='move forward' />
-    <input type="submit" name='backward' value='move backward' />
+    <input type="submit" name='forward' value='move forward'/>
+    <input type="submit" name='backward' value='move backward'/>
     {% endif %}
 </form>
 <div>
