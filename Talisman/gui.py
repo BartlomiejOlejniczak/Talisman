@@ -8,16 +8,8 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, cur
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email
-from wtforms.fields.html5 import EmailField
+from wtforms import EmailField
 from game import *
-
-# game_phase = 'how_many_players'
-# position = ''
-# char_name = ''
-# throw = ''
-# cp_index = 0
-# players_in_game = []
-# current_player = ''
 
 
 @app.route('/', methods=['POST', 'GET'])
@@ -30,6 +22,7 @@ class RegisterForm(FlaskForm):
     email = EmailField('email', validators=[DataRequired()])
     password = PasswordField('password', validators=[DataRequired()])
     send = SubmitField('register')
+
 
 class LoginForm(FlaskForm):
     email = EmailField('email', validators=[DataRequired()])
@@ -72,53 +65,50 @@ def login():
     return render_template("/login.html", form=form, logged_in=current_user.is_authenticated)
 
 
+tal_game = Game()
+
+
 @app.route('/game', methods=['GET', 'POST'])
 @login_required
 def game():
-    global player1, game_phase, position, char_name, throw, players_in_game, cp_index, current_player
-    tal_game = Game()
+
     if request.method == 'POST':
-        if game_phase == 'how_many_players':
+        print(f'tal_game game phase to {tal_game.game_phase}')
+        if tal_game.game_phase == 'how_many_players':
             a = int(request.form['p'])
             for player in range(1, a + 1):
                 player = Player()
                 player.choose_character_random()
                 player.name = f'player{player}'
-                players_in_game.append(player)
+                tal_game.players_in_game.append(player)
 
-            game_phase = 1
-
-            current_player = players_in_game[cp_index]
-
-            char_name = current_player.character.title
-            position = current_player.character.start_position
+            tal_game.game_phase = 1
+            tal_game.current_player = tal_game.players_in_game[tal_game.cp_index]
+            return render_template('game.html', name=tal_game.current_player.character.title,
+                                   game_phase=tal_game.game_phase, throw='',
+                                   position=tal_game.current_player.character.start_position)
 
         if request.form.get('dice_roll'):
-            # print(f'babababa: {players_in_game[0].character.title}')
-            # if game_phase == 1:
-            #     throw = current_player.throw_1c()
-            #     current_player.throw = throw
-            tal_game.dice_roll_result = current_player.dice_roll_single()
-            print(f'tal_game.dice_roll_result: {tal_game.dice_roll_result}')
-
-            # move_dice_roll(current_player)
-            game_phase = 2
-
+            tal_game.current_player.dice_roll_single()
+            tal_game.game_phase = 2
 
         if request.form.get('forward'):
-            print(f'rzut kostka: {tal_game.dice_roll_result}')
-            # m_forward(current_player)
-            # current_player.move_forward(tal_game.dice_roll_result)
-
+            tal_game.current_player.move_forward(tal_game.current_player.dice_roll_result)
+            tal_game.end_turn()
 
         if request.form.get('backward'):
-            current_player.move_backward(dice_roll_result)
-            position = current_player.position.name
-            print(position)
+            tal_game.current_player.move_backward(tal_game.current_player.dice_roll_result)
+            tal_game.end_turn()
 
-        return render_template('game.html', name=char_name, game_phase=game_phase, throw=dice_roll_result, position=position)
+        position = tal_game.current_player.position.name
 
-    return render_template('game.html', name=char_name, game_phase=game_phase, throw=dice_roll_result, position=position)
+        return render_template('game.html', name=tal_game.current_player.character.title,
+                               game_phase=tal_game.game_phase,
+                               throw=tal_game.current_player.dice_roll_result,
+                               position=position)
+
+    return render_template('game.html', name='', game_phase=tal_game.game_phase, throw='',
+                           position='')
 
 
 if __name__ == '__main__':
