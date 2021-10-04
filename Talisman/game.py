@@ -61,4 +61,14 @@ class Game():
         self.game_phase = 1
         self.current_player=self.players_in_game[self.cp_index]
 
+    def check_player_position(self):
+        for p in self.players_in_game:
+            if  p != self.current_player:
+                if p.position == self.current_player.position:
+                    print('true')
+                    print(p.character.title)
+                else:
+                    print('false')
+
+
 

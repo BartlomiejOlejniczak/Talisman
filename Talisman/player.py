@@ -10,7 +10,7 @@ class Player(Game):
         super().__init__()
         # self.tal_game=Game()
         self.character = ''
-        # self.position = ''
+        self.position = ''
         # self.name = ''
         # self.current_player = ''
         # self.throw = ''

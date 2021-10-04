@@ -94,10 +94,12 @@ def game():
 
         if request.form.get('forward'):
             tal_game.current_player.move_forward(tal_game.current_player.dice_roll_result)
+            tal_game.check_player_position()
             tal_game.end_turn()
 
         if request.form.get('backward'):
             tal_game.current_player.move_backward(tal_game.current_player.dice_roll_result)
+            tal_game.check_player_position()
             tal_game.end_turn()
 
         position = tal_game.current_player.position.name
