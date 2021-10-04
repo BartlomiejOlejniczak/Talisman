@@ -1,5 +1,10 @@
 {% include "header.html" %}
 <body>
-<form></form>
+<form method="POST">
+    {{ form.email.label }}
+    {{ form.email() }}
+    {{ form.password.label }}
+    {{ form.password() }}
+    {{ form.send() }}
+</form>
 </body>
-</html>

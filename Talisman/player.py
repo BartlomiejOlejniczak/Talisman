@@ -1,7 +1,7 @@
 from database import *
 import cards
 import random
-import game
+from game import *
 from poszukiwacze import *
 
 
@@ -28,22 +28,23 @@ class Player():
         classes.remove(char)
         return char
 
-    def throw_1c(self):
+    def dice_roll_single(self):
         result = random.randint(1, 6)
         print(f' wynik rzutu: {result}')
+        # dice_roll_result = result
         return result
 
-    def throw_2c(self):
+    def dice_roll_double(self):
         result = random.randint(2, 12)
         print(f' wynik rzutu: {result}')
         return result
 
-    def move_forward(self, throw):
+    def move_forward(self, dice_roll_result):
         if request.method == 'POST':
             if request.form.get('forward'):
                 if IndexError:
                     self.position = cards.ow_game_field[
-                        cards.ow_game_field.index(self.position) + throw - len(cards.ow_game_field)]
+                        cards.ow_game_field.index(self.position) + dice_roll_result - len(cards.ow_game_field)]
                     return self.position
 
     def move_backward(self, throw):
