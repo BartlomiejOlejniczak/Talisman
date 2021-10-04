@@ -39,7 +39,6 @@ class Game():
         self.players_in_game = []
         self.current_player = ''
 
-
     def dice_roll_single(self):
         result = random.randint(1, 6)
         # print(f' wynik rzutu: {result}')
@@ -59,16 +58,15 @@ class Game():
         else:
             self.cp_index += 1
         self.game_phase = 1
-        self.current_player=self.players_in_game[self.cp_index]
+        self.current_player = self.players_in_game[self.cp_index]
 
     def check_player_position(self):
         for p in self.players_in_game:
-            if  p != self.current_player:
+            if p != self.current_player:
                 if p.position == self.current_player.position:
-                    print('true')
+                    # print('true')
                     print(p.character.title)
+                    return True
                 else:
-                    print('false')
-
-
+                    return False
 

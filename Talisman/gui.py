@@ -73,7 +73,6 @@ tal_game = Game()
 def game():
 
     if request.method == 'POST':
-        print(f'tal_game game phase to {tal_game.game_phase}')
         if tal_game.game_phase == 'how_many_players':
             a = int(request.form['p'])
             for player in range(1, a + 1):
@@ -94,13 +93,17 @@ def game():
 
         if request.form.get('forward'):
             tal_game.current_player.move_forward(tal_game.current_player.dice_roll_result)
-            tal_game.check_player_position()
-            tal_game.end_turn()
+            tal_game.game_phase = 3
 
         if request.form.get('backward'):
             tal_game.current_player.move_backward(tal_game.current_player.dice_roll_result)
-            tal_game.check_player_position()
-            tal_game.end_turn()
+            tal_game.game_phase = 3
+
+        if tal_game.game_phase == 3:
+            if not tal_game.check_player_position():
+                tal_game.end_turn()
+            else:
+                print('walka')
 
         position = tal_game.current_player.position.name
 

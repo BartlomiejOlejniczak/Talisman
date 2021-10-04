@@ -35,7 +35,7 @@ class Player(Game):
                 if IndexError:
                     self.position = cards.ow_game_field[
                         cards.ow_game_field.index(self.position) + dice_roll_result - len(cards.ow_game_field)]
-                    return self.position
+                    return self.position,
 
     def move_backward(self, dice_roll_result):
         self.position = cards.ow_game_field[cards.ow_game_field.index(self.position) - dice_roll_result]
