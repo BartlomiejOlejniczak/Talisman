@@ -71,9 +71,10 @@ tal_game = Game()
 @app.route('/game', methods=['GET', 'POST'])
 @login_required
 def game():
-
     if request.method == 'POST':
+
         if tal_game.game_phase == 'how_many_players':
+            # print(tal_game.adventure_cards)
             a = int(request.form['p'])
             for player in range(1, a + 1):
                 player = Player()
@@ -87,23 +88,49 @@ def game():
                                    game_phase=tal_game.game_phase, throw='',
                                    position=tal_game.current_player.character.start_position)
 
-        if request.form.get('dice_roll'):
+        if request.form.get('dice_roll') and tal_game.game_phase == 1:
             tal_game.current_player.dice_roll_single()
             tal_game.game_phase = 2
 
-        if request.form.get('forward'):
+        if request.form.get('forward') and tal_game.game_phase == 2:
             tal_game.current_player.move_forward(tal_game.current_player.dice_roll_result)
             tal_game.game_phase = 3
 
-        if request.form.get('backward'):
+        if request.form.get('backward') and tal_game.game_phase == 2:
             tal_game.current_player.move_backward(tal_game.current_player.dice_roll_result)
             tal_game.game_phase = 3
 
         if tal_game.game_phase == 3:
+            # check if is another player on space
             if not tal_game.check_player_position():
-                tal_game.end_turn()
+                # if not go to space ecounter
+                tal_game.game_phase = 4
             else:
-                print('walka')
+                # if yes choose if you want to ecounter character
+                tal_game.game_phase = 5_1
+
+        # ECOUNTER the SPACE  PHASE
+
+        if tal_game.game_phase == 4:
+            # check if space has special abilites ex. Town
+            if not tal_game.check_if_space_is_special():
+                # drawing a card
+                tal_game.draw_card()
+                if tal_game.current_adv_card.type == 'enemy':
+                    tal_game.game_phase = 5_2
+                print(f'draw {tal_game.current_player.position.card} card')
+
+            else:
+                tal_game.end_turn()
+
+        # ECOUNTER WITH ENEMY
+        if tal_game.game_phase == 5_2:
+            if request.form.get('dice_roll_enemy'):
+                tal_game.enemy_strength = tal_game.current_adv_card.strength + tal_game.current_player.dice_roll_single()
+            if request.form.get('dice_roll_character'):
+                tal_game.current_player_battle_strength = tal_game.current_player.character.strenght + tal_game.current_player.dice_roll_single()
+            if tal_game.current_player_battle_strength != '' and tal_game.enemy_strength != '':
+                tal_game.ecounter_with_enemy()
 
         position = tal_game.current_player.position.name
 

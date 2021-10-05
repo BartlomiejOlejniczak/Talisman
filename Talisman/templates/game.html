@@ -13,12 +13,16 @@
     <input type="submit" name='p' value='5'/>
     <input type="submit" name='p' value='6'/>
     {% endif %}
-    {% if game_phase == 1 %}
+    {% if game_phase == 1%}
     <input type="submit" name='dice_roll' value='dice roll'/>
     {% endif %}
     {% if game_phase == 2 %}
     <input type="submit" name='forward' value='move forward'/>
     <input type="submit" name='backward' value='move backward'/>
+    {% endif %}
+    {% if game_phase == 5_2 %}
+    <input type="submit" name='dice_roll_enemy' value='dice roll for enemy'/>
+    <input type="submit" name='dice_roll_character' value='dice roll for character'/>
     {% endif %}
 </form>
 <div>

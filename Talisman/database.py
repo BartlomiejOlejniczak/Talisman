@@ -37,18 +37,17 @@ class AdventureCard(db.Model, Base):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(250), nullable=False)
     type = db.Column(db.String(250), nullable=False)
-    description = db.Column(db.String(250), nullable=True)
     meet_number = db.Column(db.Integer, nullable=False)
-
-
-class AdventureCard_enemy(db.Model, Base):
-    __tablename__ = 'adventure_card_enemy'
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(250), nullable=False)
-    description = db.Column(db.String(250), nullable=True)
+    enemy_type = db.Column(db.String(250), nullable=True)
+    is_special = db.Column(db.Boolean, nullable=True)
     strength = db.Column(db.Integer, nullable=True)
     craft = db.Column(db.Integer, nullable=True)
-    meet_number = db.Column(db.Integer, nullable=False)
+    description = db.Column(db.String(250), nullable=True)
+
+    def __init__(self):
+        self.position = ''
+
+
 
 
 class Character(db.Model, Base):
@@ -83,14 +82,17 @@ def admin_only(f):
     return decorated_function
 
 # db.create_all()
-
-# new_ac_enemy = AdventureCard_enemy()
-# new_ac_enemy.title = 'bear'
-# new_ac_enemy.strength = 3
-# new_ac_enemy.meet_number = 2
-# db.session.add(new_ac_enemy)
+#
+# new_ac = AdventureCard()
+# new_ac.title = 'bear'
+# new_ac.strength = 3
+# new_ac.meet_number = 2
+# new_ac.type = 'enemy'
+# new_ac.enemy_type = 'animal'
+# db.session.add(new_ac)
 # db.session.commit()
 
+# new_ac = AdventureCard()
 
 #
 # new_field = Outer_world()
@@ -99,5 +101,4 @@ def admin_only(f):
 #
 # db.session.add(new_field)
 # db.session.commit()
-
 
