@@ -14,13 +14,33 @@
     <input type="submit" name='p' value='6'/>
     {% endif %}
     {% if game_phase == 1%}
+    <h1>Please roll the dice to begin movement</h1>
     <input type="submit" name='dice_roll' value='dice roll'/>
     {% endif %}
     {% if game_phase == 2 %}
-    <input type="submit" name='forward' value='move forward'/>
-    <input type="submit" name='backward' value='move backward'/>
+    <div>
+        <h2>{{ move_option_1 }}</h2>
+        <input type="submit" name='forward' value='Go to {{ move_option_1}}'/>
+    </div>
+    <div>
+        <h2>{{ move_option_2 }}</h2>
+        <input type="submit" name='backward' value='Go to {{ move_option_2 }}'/>
+    </div>
+
     {% endif %}
-    {% if game_phase == 5_2 %}
+    {% if game_phase == 'EWE_Evade' %}
+    <h1>Do you want to try to evade?</h1>
+    <input type="submit" name='yes' value='YES'/>
+    <input type="submit" name='no' value='NO'/>
+    {% endif %}
+    {% if game_phase == 'EWE_Spells' %}
+    <h1>Do you want to cast spell before battle?</h1>
+    <input type="submit" name='yes' value='YES'/>
+    <input type="submit" name='no' value='NO'/>
+    {% endif %}
+
+    {% if game_phase == 'EWE_Battle' %}
+    <h1>Battle with {{ enemy_name }}</h1>
     <input type="submit" name='dice_roll_enemy' value='dice roll for enemy'/>
     <input type="submit" name='dice_roll_character' value='dice roll for character'/>
     {% endif %}

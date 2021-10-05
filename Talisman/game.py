@@ -47,11 +47,9 @@ class Game():
         self.current_player_battle_strength = ''
         self.enemy_strength = ''
 
-
     def dice_roll_single(self):
         result = random.randint(1, 6)
-        # print(f' wynik rzutu: {result}')
-        # dice_roll_result = result
+        print(f'aaa{ result }')
         self.dice_roll_result = result
         return result
 
@@ -78,6 +76,30 @@ class Game():
                     return True
                 else:
                     return False
+
+    def check_if_space_is_special(self):
+        if self.current_player.position.special:
+            return True
+        else:
+            return False
+        # print(self.current_player.position.name)
+        # print(self.current_player.position.special)
+
+    def draw_card(self):
+        card = random.choice(self.adventure_cards)
+        card.position = self.current_player.position
+        self.adventure_cards.remove(card)
+        self.current_adv_card = card
+        return card
+
+    def ecounter_with_enemy(self):
+        if self.current_player_battle_strength > self.enemy_strength:
+            print('player won')
+        elif self.current_player_battle_strength > self.enemy_strength:
+            print('player lost')
+        else:
+            print('draw')
+        self.end_turn()
 
     def check_if_space_is_special(self):
         if self.current_player.position.special:

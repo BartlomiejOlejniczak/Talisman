@@ -10,7 +10,6 @@ from functools import wraps
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 
-
 Base = declarative_base()
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///talisman.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -19,9 +18,11 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
 
 class Outer_world(db.Model, Base):
     __tablename__ = 'outer_world'
@@ -46,8 +47,7 @@ class AdventureCard(db.Model, Base):
 
     def __init__(self):
         self.position = ''
-
-
+        self.tokens = ''
 
 
 class Character(db.Model, Base):
@@ -64,6 +64,41 @@ class Character(db.Model, Base):
     start_position = db.Column(db.String(250), nullable=False)
     craft_fighting = db.Column(db.Boolean, nullable=True)
 
+    def __init__(self):
+        self.title = ''
+        Character.title = self.title
+        self.strenght = 0
+        Character.strenght = self.strenght
+        self.craft = 0
+        Character.craft = self.craft
+        self.gold = 0
+        Character.gold = self.gold
+        self.fate = 0
+        Character.fate = self.fate
+        self.life = 4
+        Character.life = self.life
+        self.spells = 0
+        Character.spells = self.spells
+        self.max_items = 4
+        self.start_position = ''
+        Character.start_position = self.start_position
+        self.aligment = 'neutral'
+        Character.aligment = self.aligment
+        self.craft_fighting = False
+        Character.craft_fighting = self.craft_fighting
+
+    def small_wizz(self):
+        self.spells = 1
+
+    def big_wizz(self):
+        self.spells = 2
+
+    def craft_attack(self):
+        pass
+
+    def can_fight_craft(self):
+        self.craft_fighting = True
+
 
 class User(UserMixin, db.Model):
     __tablename__ = "users"
@@ -79,7 +114,9 @@ def admin_only(f):
         if current_user.id != 1:
             return abort(403)
         return f(*args, **kwargs)
+
     return decorated_function
+
 
 # db.create_all()
 #
@@ -101,4 +138,3 @@ def admin_only(f):
 #
 # db.session.add(new_field)
 # db.session.commit()
-
