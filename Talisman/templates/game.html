@@ -33,7 +33,7 @@
     <input type="submit" name='dice_roll' value='dice roll'/>
     {% endif %}
 
-    {% if game_subphase == 'movement' %}
+    {% if game_phase == 'movement_dice_roll' and game_subphase == 'movement' %}
     <div>
         <h2>{{ move_option_1 }}</h2>
         <input type="submit" name='forward' value='Go to {{ button_mo1}}'/>
@@ -51,13 +51,12 @@
         <input type="submit" name='draw' value='Draw a card'/>
     </div>
     {% endif %}
-        {% if game_subphase == 'ETS_draw'%}
-        <div>
-            <h3>{{ card }}</h3>
-            <input type="submit" name='OK' value='OK'/>
-        </div>
+    {% if game_subphase == 'ETS_draw'%}
+    <div>
+        <h3>{{ card }}</h3>
+        <input type="submit" name='ppp' value='OK'/>
+    </div>
     {% endif %}
-
 
 
     <!--    BATTLE PHASE    -->
