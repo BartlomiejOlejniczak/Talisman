@@ -32,6 +32,7 @@ from player import *
 class Game():
     def __init__(self):
         self.game_phase = 'how_many_players'
+        self.game_subphase = ''
         self.position = ''
         self.char_name = ''
         self.dice_roll_result = ''
@@ -44,8 +45,6 @@ class Game():
         self.current_adv_card = ''
 
         self.current_player = ''
-        self.current_player_battle_strength = ''
-        self.enemy_strength = ''
 
     def dice_roll_single(self):
         result = random.randint(1, 6)
@@ -116,11 +115,19 @@ class Game():
         self.current_adv_card = card
         return card
 
-    def ecounter_with_enemy(self):
+    def ecounter_with_enemy(self, es, ps):
+
+        self.current_player_battle_strength = es
+        self.enemy_strength = ps
+        print(f'zycie gracza {self.current_player.character.life}')
         if self.current_player_battle_strength > self.enemy_strength:
             print('player won')
         elif self.current_player_battle_strength > self.enemy_strength:
+            self.current_player.character.life -= 1
             print('player lost')
         else:
             print('draw')
         self.end_turn()
+
+    def game_is_on(self):
+        return True

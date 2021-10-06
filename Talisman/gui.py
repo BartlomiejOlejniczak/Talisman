@@ -74,7 +74,6 @@ def game():
     if request.method == 'POST':
 
         if tal_game.game_phase == 'how_many_players':
-            # print(tal_game.adventure_cards)
             a = int(request.form['p'])
             for player in range(1, a + 1):
                 player = Player()
@@ -82,96 +81,142 @@ def game():
                 player.name = f'player{player}'
                 tal_game.players_in_game.append(player)
 
-            tal_game.game_phase = 1
             tal_game.current_player = tal_game.players_in_game[tal_game.cp_index]
-            return render_template('game.html', name=tal_game.current_player.character.title,
-                                   game_phase=tal_game.game_phase, throw='',
-                                   position=tal_game.current_player.character.start_position)
 
-        if request.form.get('dice_roll') and tal_game.game_phase == 1:
-            tal_game.current_player.dice_roll_single()
-            fw_space = cards.ow_game_field[
-                cards.ow_game_field.index(
-                    tal_game.current_player.position) + tal_game.current_player.dice_roll_result - len(
-                    cards.ow_game_field)]
-            bw_space = cards.ow_game_field[
-                cards.ow_game_field.index(tal_game.current_player.position) - tal_game.current_player.dice_roll_result]
-
-            tal_game.game_phase = 2
-            move_option_1 = {'name' : fw_space.name,
-                             'cards to draw' : fw_space.card}
-
-            move_option_2 = bw_space.name
+            if len(tal_game.current_player.character.b4mov_spells) > 0:
+                tal_game.game_phase = 'b4mov_spells'
+            else:
+                tal_game.game_phase = 'movement_dice_roll'
 
             return render_template('game.html', name=tal_game.current_player.character.title,
                                    game_phase=tal_game.game_phase, throw='',
                                    position=tal_game.current_player.character.start_position,
-                                   move_option_1=move_option_1, move_option_2 = move_option_2)
+                                   game_subphase=tal_game.game_subphase)
 
-        if request.form.get('forward') and tal_game.game_phase == 2:
-            tal_game.current_player.move_forward(tal_game.current_player.dice_roll_result)
-            tal_game.game_phase = 3
+        # CAST SPELLS BEFORE MOVEMENT PHASE
 
-        if request.form.get('backward') and tal_game.game_phase == 2:
-            tal_game.current_player.move_backward(tal_game.current_player.dice_roll_result)
-            tal_game.game_phase = 3
+        if tal_game.game_phase == 'b4mov_spells':
 
-        if tal_game.game_phase == 3:
-            # check if is another player on space
-            if not tal_game.check_player_position():
-                # if not go to space ecounter
-                tal_game.game_phase = 4
+            if len(tal_game.current_player.character.b4mov_spells) > 0:
+                tal_game.game_subphase = 'b4mov_spells_casting'
+                pass
             else:
-                # if yes choose if you want to ecounter character
-                tal_game.game_phase = 5_1
+                tal_game.game_phase = 'movement_dice_roll'
+
+        # MOVEMENT PHASE
+        if tal_game.game_phase == 'movement_dice_roll':
+            if request.form.get('dice_roll') and tal_game.game_phase == 'movement_dice_roll':
+                tal_game.current_player.dice_roll_single()
+                tal_game.game_subphase = 'movement'
+                fw_space = cards.ow_game_field[
+                    cards.ow_game_field.index(
+                        tal_game.current_player.position) + tal_game.current_player.dice_roll_result - len(
+                        cards.ow_game_field)]
+                bw_space = cards.ow_game_field[
+                    cards.ow_game_field.index(
+                        tal_game.current_player.position) - tal_game.current_player.dice_roll_result]
+
+                move_option_1 = {'name': fw_space.name,
+                                 'cards to draw': fw_space.card}
+                move_option_2 = {'name': bw_space.name,
+                                 'cards to draw': bw_space.card}
+                print()
+
+                return render_template('game.html', name=tal_game.current_player.character.title,
+                                       game_phase=tal_game.game_phase, throw=tal_game.current_player.dice_roll_result, game_subphase=tal_game.game_subphase,
+                                       position=tal_game.current_player.character.start_position,
+                                       move_option_1=move_option_1, move_option_2=move_option_2,
+                                       button_mo1=fw_space.name, button_mo2 = bw_space.name)
+
+            if request.form.get('forward') and tal_game.game_subphase == 'movement':
+                tal_game.current_player.move_forward(tal_game.current_player.dice_roll_result)
+                tal_game.game_phase = 3
+
+            if request.form.get('backward') and tal_game.game_subphase == 'movement':
+                tal_game.current_player.move_backward(tal_game.current_player.dice_roll_result)
+                tal_game.game_phase = 3
+
+            if tal_game.game_phase == 3:
+                # check if is another player on space
+                if not tal_game.check_player_position():
+                    # if not go to space ecounter
+                    tal_game.game_phase = 'ETS'
+                else:
+                    # if yes choose if you want to ecounter character
+                    tal_game.game_phase = 5_1
+        position = tal_game.current_player.position.name
 
         # ECOUNTER the SPACE  PHASE
 
-        if tal_game.game_phase == 4:
+        if tal_game.game_phase == 'ETS':
             # check if space has special abilites ex. Town
             if not tal_game.check_if_space_is_special():
                 # drawing a card
-                tal_game.draw_card()
-                if tal_game.current_adv_card.type == 'enemy':
-                    tal_game.game_phase = 'EWE_Evade'
+                if request.form.get('draw'):
+                    tal_game.draw_card()
+                    card=tal_game.current_adv_card
+                    tal_game.game_subphase = 'ETS_draw'
+                    print(card)
+                    print(card.title)
+
+                    if tal_game.game_subphase == 'ETS_draw':
+                        if tal_game.current_adv_card.type == 'enemy':
+                            if request.form.get('OK'):
+                                print('ok')
+                                tal_game.game_phase = 'EWE'
+                    return render_template('game.html', name=tal_game.current_player.character.title,
+                                           game_phase=tal_game.game_phase,
+                                           throw=tal_game.current_player.dice_roll_result,
+                                           position=position, game_subphase=tal_game.game_subphase,
+                                           card=card.title)
+
                 # print(f'draw {tal_game.current_player.position.card} card')
-
             else:
                 tal_game.end_turn()
-        position = tal_game.current_player.position.name
+
         enemy_name = tal_game.current_adv_card.title
-        # ECOUNTER WITH ENEMY
-        if tal_game.game_phase == 'EWE_Evade':
-            if request.form.get('yes'):
-                tal_game.end_turn()
-            # else:
-            if request.form.get('no'):
-                tal_game.game_phase = 'EWE_Spells'
-                return render_template('game.html', name=tal_game.current_player.character.title,
-                                       game_phase=tal_game.game_phase,
-                                       throw=tal_game.current_player.dice_roll_result,
-                                       position=position)
-        if tal_game.game_phase == 'EWE_Spells':
-            if request.form.get('yes'):
-                pass
-            else:
-                tal_game.game_phase = 'EWE_Battle'
-                return render_template('game.html', name=tal_game.current_player.character.title,
-                                       game_phase=tal_game.game_phase,
-                                       throw=tal_game.current_player.dice_roll_result,
-                                       position=position, enemy_name=enemy_name)
-        if tal_game.game_phase == 'EWE_Battle':
-            if request.form.get('dice_roll_enemy'):
-                tal_game.enemy_strength = tal_game.current_adv_card.strength + tal_game.current_player.dice_roll_single()
-            if request.form.get('dice_roll_character'):
-                tal_game.current_player_battle_strength = tal_game.current_player.character.strenght + tal_game.current_player.dice_roll_single()
-            if tal_game.current_player_battle_strength != '' and tal_game.enemy_strength != '':
-                tal_game.ecounter_with_enemy()
 
-        return render_template('game.html', name=tal_game.current_player.character.title,
-                               game_phase=tal_game.game_phase,
-                               throw=tal_game.current_player.dice_roll_result,
-                               position=position)
+        # ECOUNTER WITH ENEMY
+        if tal_game.game_phase == 'EWE':
+
+            # check if player can evade enemy
+
+            if tal_game.current_player.character.evade == True:
+                tal_game.game_subphase = 'EWE_Evade'
+                if tal_game.game_subphase == 'EWE_Evade':
+                    if request.form.get('yes'):
+                        tal_game.end_turn()
+                    if request.form.get('no'):
+                        tal_game.game_phase = 'EWE_Spells'
+                return render_template('game.html', name=tal_game.current_player.character.title,
+                                       game_phase=tal_game.game_phase,
+                                       throw=tal_game.current_player.dice_roll_result,
+                                       position=position, game_subphase=tal_game.game_subphase)
+            else:
+                tal_game.game_subphase = 'EWE_Spells'
+
+            if tal_game.game_subphase == 'EWE_Spells':
+                if request.form.get('yes'):
+                    pass
+                else:
+                    tal_game.game_subphase = 'EWE_Battle'
+                    return render_template('game.html', name=tal_game.current_player.character.title,
+                                           game_phase=tal_game.game_phase,
+                                           throw=tal_game.current_player.dice_roll_result,
+                                           position=position, enemy_name=enemy_name,
+                                           game_subphase=tal_game.game_subphase)
+            if tal_game.game_subphase == 'EWE_Battle':
+                if request.form.get('dice_roll_enemy'):
+                    tal_game.enemy_strength = tal_game.current_adv_card.strength + tal_game.current_player.dice_roll_single()
+                if request.form.get('dice_roll_character'):
+                    tal_game.current_player_battle_strength = tal_game.current_player.character.strenght + tal_game.current_player.dice_roll_single()
+                if tal_game.current_player_battle_strength != '' and tal_game.enemy_strength != '':
+                    tal_game.ecounter_with_enemy()
+
+            return render_template('game.html', name=tal_game.current_player.character.title,
+                                   game_phase=tal_game.game_phase,
+                                   throw=tal_game.current_player.dice_roll_result,
+                                   position=position, game_subphase=tal_game.game_subphase)
 
     return render_template('game.html', name='', game_phase=tal_game.game_phase, throw='',
                            position='')

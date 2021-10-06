@@ -47,6 +47,8 @@ class Warrior(Character):
         self.fate = 1
         self.life = 5
         self.start_position = 'tavern'
+        self.evade = True
+
 
     def twohanded(self):
         print('use two weapons')

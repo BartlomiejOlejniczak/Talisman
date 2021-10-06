@@ -86,6 +86,8 @@ class Character(db.Model, Base):
         Character.aligment = self.aligment
         self.craft_fighting = False
         Character.craft_fighting = self.craft_fighting
+        self.evade = False
+        self.b4mov_spells = []
 
     def small_wizz(self):
         self.spells = 1
