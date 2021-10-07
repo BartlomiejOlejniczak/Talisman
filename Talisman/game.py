@@ -43,12 +43,17 @@ class Game():
         self.used_adventures_cards = []
         self.current_adventures_cards = []
         self.current_adv_card = ''
-
         self.current_player = ''
+
+        self.printed()
+
+
+    def printed(self):
+        print(f'printed phase {self.game_phase} subphase {self.game_subphase}')
+
 
     def dice_roll_single(self):
         result = random.randint(1, 6)
-        print(f'aaa{ result }')
         self.dice_roll_result = result
         return result
 
@@ -63,7 +68,8 @@ class Game():
             self.cp_index = 0
         else:
             self.cp_index += 1
-        self.game_phase = 1
+        self.game_phase = 'movement_dice_roll'
+        self.game_subphase = ''
         self.current_player = self.players_in_game[self.cp_index]
 
     def check_player_position(self):

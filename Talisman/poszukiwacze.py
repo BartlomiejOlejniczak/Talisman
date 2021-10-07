@@ -73,7 +73,7 @@ class Thiev(Character):
         pass
 
 
-classes = [Warrior(), Thiev()]
+classes = [Warrior()]
 
 # db.create_all()
 # db.session.add(Thiev())

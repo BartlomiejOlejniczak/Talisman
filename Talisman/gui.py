@@ -200,6 +200,7 @@ def game():
                                    card=card.title)
 
         enemy_name = tal_game.current_adv_card.title
+        enemy = tal_game.current_adv_card
 
         # ECOUNTER WITH ENEMY
         if tal_game.game_phase == 'EWE':
@@ -209,10 +210,11 @@ def game():
             if tal_game.current_player.character.evade == True:
                 tal_game.game_subphase = 'EWE_Evade'
                 if tal_game.game_subphase == 'EWE_Evade':
-                    if request.form.get('yes'):
+                    if request.form.get('yes_EWE_Evade') and tal_game.game_subphase == 'EWE_Evade' :
                         tal_game.end_turn()
-                    if request.form.get('no'):
+                    if request.form.get('no_EWE_Evade'):
                         tal_game.game_subphase = 'EWE_Spells'
+                        print(tal_game.game_subphase)
                 return render_template('game.html', name=tal_game.current_player.character.title,
                                        game_phase=tal_game.game_phase,
                                        throw=tal_game.current_player.dice_roll_result,
@@ -220,16 +222,22 @@ def game():
             else:
                 tal_game.game_subphase = 'EWE_Spells'
 
+
             if tal_game.game_subphase == 'EWE_Spells':
-                if request.form.get('yes'):
-                    pass
-                else:
+                print(f' pppppppppppppppp {tal_game.game_subphase}')
+                if request.form.get('yes_EWE_Spells') and tal_game.game_subphase == 'EWE_Spells' :
+                    print(f' yes {tal_game.game_subphase}')
                     tal_game.game_subphase = 'EWE_Battle'
-                    return render_template('game.html', name=tal_game.current_player.character.title,
+                if request.form.get('no_EWE_Spells'):
+                    tal_game.game_subphase = 'EWE_Battle'
+                return render_template('game.html', name=tal_game.current_player.character.title,
                                            game_phase=tal_game.game_phase,
                                            throw=tal_game.current_player.dice_roll_result,
                                            position=position, enemy_name=enemy_name,
-                                           game_subphase=tal_game.game_subphase)
+                                           game_subphase=tal_game.game_subphase, enemy_strength=enemy.strength)
+
+
+
             if tal_game.game_subphase == 'EWE_Battle':
                 if request.form.get('dice_roll_enemy'):
                     tal_game.enemy_strength = tal_game.current_adv_card.strength + tal_game.current_player.dice_roll_single()
@@ -240,7 +248,7 @@ def game():
                 if tal_game.current_player_battle_strength != '' and tal_game.enemy_strength != '':
                     tal_game.ecounter_with_enemy()
 
-            return render_template('game.html', name=tal_game.current_player.character.title,
+                return render_template('game.html', name=tal_game.current_player.character.title,
                                    game_phase=tal_game.game_phase,
                                    throw=tal_game.current_player.dice_roll_result,
                                    position=position, game_subphase=tal_game.game_subphase)
