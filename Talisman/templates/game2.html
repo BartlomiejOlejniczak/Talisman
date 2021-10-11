@@ -1,34 +1,28 @@
 {% include "header.html" %}
 <body>
-<form method="post">
-    {% if game_phase == 3 %}
-    <input type="submit" name='choose_char' value=' get random character'/>
-    {% endif %}
-    {% if game_phase == 'how_many_players' %}
-    <p>How many players?</p>
-    <input type="submit" name='p' value='1'/>
-    <input type="submit" name='p' value='2'/>
-    <input type="submit" name='p' value='3'/>
-    <input type="submit" name='p' value='4'/>
-    <input type="submit" name='p' value='5'/>
-    <input type="submit" name='p' value='6'/>
-    {% endif %}
 
 
-    {% if game_phase == 'b4mov_spells' %}
+<!--    <input type="submit" name='choose_char' value=' get random character'/>-->
+<form method="POST">
+<h1 id="message"></h1>
+<div id="div1">
+
+    <p >How many players? 1(not recommended) - 6</p>
+    <input type="number" id="quantity" name="quantity" min="1" max="6">
+    <input onclick="server.print()" id="b1" type="submit" name='p' value='sumbit'/>
+
+
+</div>
+<div id="gp_b4mov_spells" style="display: none">
     <h1>Do you want to cast spell before movement?</h1>
     <input type="submit" name='yes' value='YES'/>
     <input type="submit" name='no' value='NO'/>
-    {% endif %}
-    {% if game_phase == 'b4mov_spells_casting' %}
     <h1>Which spell do you want to cast?</h1>
-    {% for spell in spells %}
-    {% endfor %}
-    {% endif %}
 
+</div>
 
-
-    {% if game_phase == 'movement_dice_roll' and game_subphase != 'movement' %}
+<div id="movement_dice_roll" style="display: none">
+<!--    {% if game_phase == 'movement_dice_roll' and game_subphase != 'movement' %}-->
     <h1>Please roll the dice to begin movement</h1>
     <input type="submit" name='dice_roll' value='dice roll'/>
     {% endif %}
@@ -42,7 +36,8 @@
         <h2>{{ move_option_2 }}</h2>
         <input type="submit" name='backward' value='Go to {{ button_mo2 }}'/>
     </div>
-    {% endif %}
+<!--    {% endif %}-->
+</div>
 
 
     {% if game_phase == 'ETS' and game_subphase != 'ETS_draw' %}
@@ -78,12 +73,13 @@
     {% endif %}
 
 
-</form>
+
 <div>
-    <p id="gp">game phase: {{ game_phase }}</p>
+    <p id="gp">game phase: {{ display[0] }}</p>
     <p id="gsp">game subphase: {{ game_subphase }}</p>
     <p id="pos">dice_roll: {{ throw }}</p>
     <p id="cn">current_player title: {{ name }}</p>
     <p id="cpp">current_player position: {{ position }}</p>
 </div>
+    </form>
 </body>

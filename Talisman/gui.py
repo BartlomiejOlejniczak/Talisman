@@ -67,7 +67,6 @@ def login():
 
 tal_game = Game()
 
-
 @app.route('/game', methods=['GET', 'POST'])
 @login_required
 def game():
@@ -76,9 +75,6 @@ def game():
     except AttributeError:
         pass
     else:
-        # def position():
-        #     return tal_game.current_player.position.name
-
         position = tal_game.current_player.position.name
     try:
         tal_game.current_adv_card
@@ -86,6 +82,15 @@ def game():
         pass
     else:
         card = tal_game.current_adv_card
+
+    game_phase = tal_game.game_phase
+    game_subphase = tal_game.game_subphase
+    dice_roll = ''
+    current_player = tal_game.current_player
+    position = ''
+    name = ''
+    display = [game_phase, game_subphase, dice_roll, current_player, position]
+
     if request.method == 'POST':
 
         if tal_game.game_phase == 'how_many_players':
@@ -103,10 +108,10 @@ def game():
             else:
                 tal_game.game_phase = 'movement_dice_roll'
 
-            return render_template('game.html', name=tal_game.current_player.character.title,
-                                   game_phase=tal_game.game_phase, throw='',
-                                   position=tal_game.current_player.character.start_position,
-                                   game_subphase=tal_game.game_subphase)
+            # return render_template('game.html', name=tal_game.current_player.character.title,
+            #                        game_phase=tal_game.game_phase, throw='',
+            #                        position=tal_game.current_player.character.start_position,
+            #                        game_subphase=tal_game.game_subphase)
 
         # CAST SPELLS BEFORE MOVEMENT PHASE
 
@@ -136,12 +141,12 @@ def game():
                 move_option_2 = {'name': bw_space.name,
                                  'cards to draw': bw_space.card}
 
-                return render_template('game.html', name=tal_game.current_player.character.title,
-                                       game_phase=tal_game.game_phase, throw=tal_game.current_player.dice_roll_result,
-                                       game_subphase=tal_game.game_subphase,
-                                       position=tal_game.current_player.character.start_position,
-                                       move_option_1=move_option_1, move_option_2=move_option_2,
-                                       button_mo1=fw_space.name, button_mo2=bw_space.name)
+                # return render_template('game.html', name=tal_game.current_player.character.title,
+                #                        game_phase=tal_game.game_phase, throw=tal_game.current_player.dice_roll_result,
+                #                        game_subphase=tal_game.game_subphase,
+                #                        position=tal_game.current_player.character.start_position,
+                #                        move_option_1=move_option_1, move_option_2=move_option_2,
+                #                        button_mo1=fw_space.name, button_mo2=bw_space.name)
 
             if request.form.get('forward') and tal_game.game_subphase == 'movement':
                 tal_game.current_player.move_forward(tal_game.current_player.dice_roll_result)
@@ -162,11 +167,11 @@ def game():
                     # if yes choose if you want to ecounter character
                 #     tal_game.game_phase = 5_1
                 position = tal_game.current_player.position.name
-                return render_template('game.html', name=tal_game.current_player.character.title,
-                                       game_phase=tal_game.game_phase,
-                                       throw=tal_game.current_player.dice_roll_result,
-                                       position=position, game_subphase=tal_game.game_subphase,
-                                       )
+                # return render_template('game.html', name=tal_game.current_player.character.title,
+                #                        game_phase=tal_game.game_phase,
+                #                        throw=tal_game.current_player.dice_roll_result,
+                #                        position=position, game_subphase=tal_game.game_subphase,
+                #                        )
 
         # ECOUNTER the SPACE  PHASE
 
@@ -182,22 +187,22 @@ def game():
                     if tal_game.game_subphase == 'ETS_draw':
                         if tal_game.current_adv_card.type == 'enemy':
                             tal_game.game_phase = 'EWE'
-                    return render_template('game.html', name=tal_game.current_player.character.title,
-                                               game_phase=tal_game.game_phase,
-                                               throw=tal_game.current_player.dice_roll_result,
-                                               position=position, game_subphase=tal_game.game_subphase,
-                                               card=card.title)
+                    # return render_template('game.html', name=tal_game.current_player.character.title,
+                    #                            game_phase=tal_game.game_phase,
+                    #                            throw=tal_game.current_player.dice_roll_result,
+                    #                            position=position, game_subphase=tal_game.game_subphase,
+                    #                            card=card.title)
 
 
                 # print(f'draw {tal_game.current_player.position.card} card')
             else:
                 print('space is special')
                 tal_game.end_turn()
-            return render_template('game.html', name=tal_game.current_player.character.title,
-                                   game_phase=tal_game.game_phase,
-                                   throw=tal_game.current_player.dice_roll_result,
-                                   position=position, game_subphase=tal_game.game_subphase,
-                                   card=card.title)
+            # return render_template('game.html', name=tal_game.current_player.character.title,
+            #                        game_phase=tal_game.game_phase,
+            #                        throw=tal_game.current_player.dice_roll_result,
+            #                        position=position, game_subphase=tal_game.game_subphase,
+            #                        card=card.title)
 
         enemy_name = tal_game.current_adv_card.title
         enemy = tal_game.current_adv_card
@@ -215,10 +220,10 @@ def game():
                     if request.form.get('no_EWE_Evade'):
                         tal_game.game_subphase = 'EWE_Spells'
                         print(tal_game.game_subphase)
-                return render_template('game.html', name=tal_game.current_player.character.title,
-                                       game_phase=tal_game.game_phase,
-                                       throw=tal_game.current_player.dice_roll_result,
-                                       position=position, game_subphase=tal_game.game_subphase)
+                # return render_template('game.html', name=tal_game.current_player.character.title,
+                #                        game_phase=tal_game.game_phase,
+                #                        throw=tal_game.current_player.dice_roll_result,
+                #                        position=position, game_subphase=tal_game.game_subphase)
             else:
                 tal_game.game_subphase = 'EWE_Spells'
 
@@ -230,11 +235,11 @@ def game():
                     tal_game.game_subphase = 'EWE_Battle'
                 if request.form.get('no_EWE_Spells'):
                     tal_game.game_subphase = 'EWE_Battle'
-                return render_template('game.html', name=tal_game.current_player.character.title,
-                                           game_phase=tal_game.game_phase,
-                                           throw=tal_game.current_player.dice_roll_result,
-                                           position=position, enemy_name=enemy_name,
-                                           game_subphase=tal_game.game_subphase, enemy_strength=enemy.strength)
+                # return render_template('game.html', name=tal_game.current_player.character.title,
+                #                            game_phase=tal_game.game_phase,
+                #                            throw=tal_game.current_player.dice_roll_result,
+                #                            position=position, enemy_name=enemy_name,
+                #                            game_subphase=tal_game.game_subphase, enemy_strength=enemy.strength)
 
 
 
@@ -248,13 +253,14 @@ def game():
                 if tal_game.current_player_battle_strength != '' and tal_game.enemy_strength != '':
                     tal_game.ecounter_with_enemy()
 
-                return render_template('game.html', name=tal_game.current_player.character.title,
-                                   game_phase=tal_game.game_phase,
-                                   throw=tal_game.current_player.dice_roll_result,
-                                   position=position, game_subphase=tal_game.game_subphase)
+                # return render_template('game.html', name=tal_game.current_player.character.title,
+                #                    game_phase=tal_game.game_phase,
+                #                    throw=tal_game.current_player.dice_roll_result,
+                #                    position=position, game_subphase=tal_game.game_subphase)
 
-    return render_template('game.html', name='', game_phase=tal_game.game_phase, throw='',
-                           position='')
+    # return render_template('game.html', name='', game_phase=tal_game.game_phase, throw='',
+    #                        position='')
+    return render_template('game2.html', display=display)
 
 
 if __name__ == '__main__':

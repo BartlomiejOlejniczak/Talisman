@@ -4,6 +4,8 @@ from sqlalchemy import Table, Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
+import jyserver.Flask as jsf
+
 
 from functools import wraps
 
@@ -22,6 +24,12 @@ login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+
+# @app.route('/', methods=['GET', 'POST'])
+# def home():
+#     return App.render(render_template('index2.html'))
+
 
 
 class Outer_world(db.Model, Base):
