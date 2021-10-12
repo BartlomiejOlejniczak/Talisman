@@ -4,40 +4,41 @@
 
 <!--    <input type="submit" name='choose_char' value=' get random character'/>-->
 <form method="POST">
-<h1 id="message"></h1>
-<div id="div1">
+    <h1 id="message"></h1>
 
-    <p >How many players? 1(not recommended) - 6</p>
+    {% if display['game_phase'] == 'how_many_players' %}
+    <p>How many players? 1(not recommended) - 6</p>
     <input type="number" id="quantity" name="quantity" min="1" max="6">
-    <input onclick="server.print()" id="b1" type="submit" name='p' value='sumbit'/>
+    <input id="b1" type="submit" name='p' value='sumbit'/>
+    {% endif %}
 
 
-</div>
-<div id="gp_b4mov_spells" style="display: none">
+    {% if display['game_phase'] == 'b4mov_spells' %}
     <h1>Do you want to cast spell before movement?</h1>
     <input type="submit" name='yes' value='YES'/>
     <input type="submit" name='no' value='NO'/>
+    {% endif %}
+    {% if game_phase == 'b4mov_spells_casting' %}
     <h1>Which spell do you want to cast?</h1>
+    {% for spell in spells %}
+    {% endfor %}
+    {% endif %}
 
-</div>
 
-<div id="movement_dice_roll" style="display: none">
-<!--    {% if game_phase == 'movement_dice_roll' and game_subphase != 'movement' %}-->
+    {% if display['game_phase'] == 'movement_dice_roll' and display['game_subphase'] != 'movement' %}
     <h1>Please roll the dice to begin movement</h1>
     <input type="submit" name='dice_roll' value='dice roll'/>
     {% endif %}
-
-    {% if game_phase == 'movement_dice_roll' and game_subphase == 'movement' %}
+    {% if display['game_phase'] == 'movement_dice_roll' and display['game_subphase'] == 'movement' %}
     <div>
-        <h2>{{ move_option_1 }}</h2>
-        <input type="submit" name='forward' value='Go to {{ button_mo1}}'/>
+        <h2>{{ display['move_option_1']['name'] }} {{ display['move_option_1']['cards_to_draw'] }}</h2>
+        <input type="submit" name='forward' value='Go to {{ display["move_option_1"]["name"]}}'/>
     </div>
     <div>
-        <h2>{{ move_option_2 }}</h2>
-        <input type="submit" name='backward' value='Go to {{ button_mo2 }}'/>
+        <h2>{{ display['move_option_2']['name'] }} {{ display['move_option_2']['cards_to_draw'] }}</h2>
+        <input type="submit" name='backward' value='Go to {{  display["move_option_2"]["name"]}}'/>
     </div>
-<!--    {% endif %}-->
-</div>
+    {% endif %}
 
 
     {% if game_phase == 'ETS' and game_subphase != 'ETS_draw' %}
@@ -52,7 +53,6 @@
         <input type="submit" name='ppp' value='OK'/>
     </div>
     {% endif %}
-
 
 
     {% if game_subphase == 'EWE_Evade' %}
@@ -73,13 +73,12 @@
     {% endif %}
 
 
-
-<div>
-    <p id="gp">game phase: {{ display[0] }}</p>
-    <p id="gsp">game subphase: {{ game_subphase }}</p>
-    <p id="pos">dice_roll: {{ throw }}</p>
-    <p id="cn">current_player title: {{ name }}</p>
-    <p id="cpp">current_player position: {{ position }}</p>
-</div>
-    </form>
+    <div>
+        <p id="gp">game phase: {{ display['game_phase'] }}</p>
+        <p id="gsp">game subphase: {{ display['game_subphase'] }}</p>
+        <p id="pos">dice_roll: {{ display['dice_roll'] }}</p>
+        <p id="cn">current_player title: {{ display['name'] }}</p>
+        <p id="cpp">current_player position: {{ display['position'] }}</p>
+    </div>
+</form>
 </body>
