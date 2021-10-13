@@ -89,15 +89,25 @@ def game():
     if request.method == 'POST':
         if tal_game.game_phase == 'how_many_players':
             a = int(request.form['quantity'])
-            tal_game.how_many_players(a)
+            for player in range(1, a + 1):
+                print('ppppppppp')
+                player = Player()
+                player.choose_character_random()
+                player.name = f'player{player}'
+                tal_game.players_in_game.append(player)
+                print(player)
+
+
+            tal_game.current_player = tal_game.players_in_game[tal_game.cp_index]
 
             if len(tal_game.current_player.character.b4mov_spells) > 0:
                 tal_game.game_phase = 'b4mov_spells'
+                print('b4mov_spells')
             else:
                 tal_game.game_phase = 'movement_dice_roll'
-
+                print('movement_dice_roll')
+            tal_game.display_ref()
             return render_template('game2.html', display=tal_game.display)
-
         # CAST SPELLS BEFORE MOVEMENT PHASE
 
         if tal_game.game_phase == 'b4mov_spells':
@@ -117,67 +127,73 @@ def game():
                 tal_game.display_ref()
                 return render_template('game2.html', display=tal_game.display)
 
+
+
+
+            if request.form.get('forward') and tal_game.game_subphase == 'movement':
+                print('forward')
+                tal_game.current_player.move_forward(tal_game.current_player.dice_roll_result)
+                tal_game.game_phase = 3
+                tal_game.display_ref()
+
+            if request.form.get('backward') and tal_game.game_subphase == 'movement':
+                tal_game.current_player.move_backward(tal_game.current_player.dice_roll_result)
+                tal_game.game_phase = 3
+
+            if tal_game.game_phase == 3:
+# check if is another player on space
+                if not tal_game.check_player_position():
+# if not go to space ecounter
+                    tal_game.game_phase = 'ETS'
+                else:
+                    print('phase 3 pass')
+                    tal_game.game_phase = 'ETS'
+# if yes choose if you want to ecounter character
+                    tal_game.game_phase = 5_1
+                # position = tal_game.current_player.position.name
+                # return render_template('game.html', name=tal_game.current_player.character.title,
+                #                        game_phase=tal_game.game_phase,
+                #                        throw=tal_game.current_player.dice_roll_result,
+                #                        position=position, game_subphase=tal_game.game_subphase,
+                #                        )
+
             return render_template('game2.html', display=tal_game.display)
-
-
-        #     if request.form.get('forward') and tal_game.game_subphase == 'movement':
-        #         tal_game.current_player.move_forward(tal_game.current_player.dice_roll_result)
-        #         tal_game.game_phase = 3
-        #
-        #     if request.form.get('backward') and tal_game.game_subphase == 'movement':
-        #         tal_game.current_player.move_backward(tal_game.current_player.dice_roll_result)
-        #         tal_game.game_phase = 3
-        #
-        #     if tal_game.game_phase == 3:
-        #         # check if is another player on space
-        #         if not tal_game.check_player_position():
-        #             # if not go to space ecounter
-        #             tal_game.game_phase = 'ETS'
-        #         else:
-        #             print('phase 3 pass')
-        #             tal_game.game_phase = 'ETS'
-        #             # if yes choose if you want to ecounter character
-        #         #     tal_game.game_phase = 5_1
-        #         position = tal_game.current_player.position.name
-        #         # return render_template('game.html', name=tal_game.current_player.character.title,
-        #         #                        game_phase=tal_game.game_phase,
-        #         #                        throw=tal_game.current_player.dice_roll_result,
-        #         #                        position=position, game_subphase=tal_game.game_subphase,
-        #         #                        )
 
         # ECOUNTER the SPACE  PHASE
 
-        # if tal_game.game_phase == 'ETS':
-        #     # check if space has special abilites ex. Town
-        #     if not tal_game.check_if_space_is_special():
-        #         # drawing a card
-        #         if request.form.get('draw'):
-        #             tal_game.draw_card()
-        #             card = tal_game.current_adv_card
-        #             tal_game.game_subphase = 'ETS_draw'
-        #
-        #             if tal_game.game_subphase == 'ETS_draw':
-        #                 if tal_game.current_adv_card.type == 'enemy':
-        #                     tal_game.game_phase = 'EWE'
-        #             # return render_template('game.html', name=tal_game.current_player.character.title,
-        #             #                            game_phase=tal_game.game_phase,
-        #             #                            throw=tal_game.current_player.dice_roll_result,
-        #             #                            position=position, game_subphase=tal_game.game_subphase,
-        #             #                            card=card.title)
-        #
-        #
-        #         # print(f'draw {tal_game.current_player.position.card} card')
-        #     else:
-        #         print('space is special')
-        #         tal_game.end_turn()
-        #     # return render_template('game.html', name=tal_game.current_player.character.title,
-        #     #                        game_phase=tal_game.game_phase,
-        #     #                        throw=tal_game.current_player.dice_roll_result,
-        #     #                        position=position, game_subphase=tal_game.game_subphase,
-        #     #                        card=card.title)
+        if tal_game.game_phase == 'ETS':
+            # check if space has special abilites ex. Town
+            if not tal_game.check_if_space_is_special():
+                # drawing a card
+                if request.form.get('draw'):
+                    tal_game.draw_card()
+                    card = tal_game.current_adv_card
+                    tal_game.game_subphase = 'ETS_draw'
 
-        # enemy_name = tal_game.current_adv_card.title
-        # enemy = tal_game.current_adv_card
+                    if tal_game.game_subphase == 'ETS_draw':
+                        if tal_game.current_adv_card.type == 'enemy':
+                            tal_game.game_phase = 'EWE'
+                    # return render_template('game.html', name=tal_game.current_player.character.title,
+                    #                            game_phase=tal_game.game_phase,
+                    #                            throw=tal_game.current_player.dice_roll_result,
+                    #                            position=position, game_subphase=tal_game.game_subphase,
+                    #                            card=card.title)
+                    return render_template('game2.html', display=tal_game.display)
+
+
+                # print(f'draw {tal_game.current_player.position.card} card')
+            else:
+                print('space is special')
+                tal_game.end_turn()
+            # return render_template('game.html', name=tal_game.current_player.character.title,
+            #                        game_phase=tal_game.game_phase,
+            #                        throw=tal_game.current_player.dice_roll_result,
+            #                        position=position, game_subphase=tal_game.game_subphase,
+            #                        card=card.title)
+            return render_template('game2.html', display=tal_game.display)
+
+        enemy_name = tal_game.current_adv_card.title
+        enemy = tal_game.current_adv_card
 
         # ECOUNTER WITH ENEMY
         # if tal_game.game_phase == 'EWE':

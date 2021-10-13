@@ -1,5 +1,7 @@
 import random
-from player import *
+import cards
+from cards import *
+# from player import *
 
 
 # def turn():

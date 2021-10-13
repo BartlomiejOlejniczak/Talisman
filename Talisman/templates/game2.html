@@ -31,12 +31,12 @@
     {% endif %}
     {% if display['game_phase'] == 'movement_dice_roll' and display['game_subphase'] == 'movement' %}
     <div>
-        <h2>{{ display['move_option_1']['name'] }} {{ display['move_option_1']['cards_to_draw'] }}</h2>
-        <input type="submit" name='forward' value='Go to {{ display["move_option_1"]["name"]}}'/>
+        <h2>{{ display['move_backward']['name'] }} {{ display['move_backward']['cards_to_draw'] }}</h2>
+        <input type="submit" name='backward' value='Go to {{ display["move_backward"]["name"]}}'/>
     </div>
     <div>
-        <h2>{{ display['move_option_2']['name'] }} {{ display['move_option_2']['cards_to_draw'] }}</h2>
-        <input type="submit" name='backward' value='Go to {{  display["move_option_2"]["name"]}}'/>
+        <h2>{{ display['move_forward']['name'] }} {{ display['move_forward']['cards_to_draw'] }}</h2>
+        <input type="submit" name='forward' value='Go to {{  display["move_forward"]["name"]}}'/>
     </div>
     {% endif %}
 
