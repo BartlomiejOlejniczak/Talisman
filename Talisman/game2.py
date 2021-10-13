@@ -47,30 +47,38 @@ class Game:
         self.current_adv_card = ''
         self.current_player = ''
 
+        # self.current_player_battle_strength = ''
+
         self.display = {'name': '', 'game_phase': self.game_phase, 'dice_roll': '', 'position': '',
                         'game_subphase': '',
                         'move_backward': {'name': '',
                                           'cards_to_draw': ''},
                         'move_forward': {'name': '',
-                                          'cards_to_draw': ''}}
+                                          'cards_to_draw': ''},
+                        'card' : ''}
 
     def display_ref(self):
         self.display['name'] = self.current_player.character.title
         self.display['game_phase'] = self.game_phase
         self.display['dice_roll'] = self.current_player.dice_roll_result
-        self.display['position'] = self.current_player.character.start_position
+        self.display['position'] = self.current_player.position.name
         self.display['game_subphase'] = self.game_subphase
+
         self.backward_move_index = ''
         self.forward_move_index = ''
+        try:
+            self.display['card'] = self.current_adv_card
+        except AttributeError:
+            pass
         if self.current_player.dice_roll_result != '':
             try:
                 self.backward_move_index = cards.ow_game_field.index(self.current_player.position) - self.current_player.dice_roll_result
-            except TypeError:
+            except (TypeError, ValueError):
                 pass
 
             try:
                 self.forward_move_index = cards.ow_game_field.index(self.current_player.position) + self.current_player.dice_roll_result - len(cards.ow_game_field)
-            except TypeError:
+            except (TypeError, ValueError):
                 pass
 
 
@@ -121,16 +129,19 @@ class Game:
         self.game_phase = 'movement_dice_roll'
         self.game_subphase = ''
         self.current_player = self.players_in_game[self.cp_index]
+        self.display_ref()
 
     def check_player_position(self):
         for p in self.players_in_game:
             if p != self.current_player:
                 if p.position == self.current_player.position:
-                    # print('true')
+                    print('true')
                     print(p.character.title)
                     return True
                 else:
+                    print('check false')
                     return False
+        # return False
 
     def check_if_space_is_special(self):
         if self.current_player.position.special:
@@ -191,17 +202,17 @@ class Game:
     #         self.game_phase = 'movement_dice_roll'
     #     self.display_ref()
 
-    def move_forward(self, dice_roll_result):
-        if request.method == 'POST':
-            if request.form.get('forward'):
-                if IndexError:
-                    self.position = self.display['position']
-                    # self.game_phase= 3
+    # def move_forward(self, dice_roll_result):
+    #     if request.method == 'POST':
+    #         if request.form.get('forward'):
+    #             if IndexError:
+    #                 self.position = self.display['position']
+    #                 # self.game_phase= 3
+    #
+    #                 return self.position
+    #
+    # def move_backward(self, dice_roll_result):
+    #     self.position = cards.ow_game_field[cards.ow_game_field.index(self.position) - dice_roll_result]
+    #     return self.position
 
-                    return self.position
-
-    def move_backward(self, dice_roll_result):
-        self.position = cards.ow_game_field[cards.ow_game_field.index(self.position) - dice_roll_result]
-        return self.position
-
-
+tal_game = Game()

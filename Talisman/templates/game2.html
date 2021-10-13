@@ -41,32 +41,35 @@
     {% endif %}
 
 
-    {% if game_phase == 'ETS' and game_subphase != 'ETS_draw' %}
+    {% if display['game_phase']  == 'ETS' and display['game_subphase'] != 'ETS_draw' %}
     <div>
         <h2> Draw a card </h2>
         <input type="submit" name='draw' value='Draw a card'/>
     </div>
     {% endif %}
-    {% if game_subphase == 'ETS_draw'%}
+    {% if display['game_subphase'] == 'ETS_draw'%}
     <div>
-        <h3>{{ card }}</h3>
+        <h3>{{ display['card'].title
+            }}</h3>
         <input type="submit" name='ppp' value='OK'/>
     </div>
     {% endif %}
 
 
-    {% if game_subphase == 'EWE_Evade' %}
+    {% if display['game_subphase'] == 'EWE_Evade' %}
     <h1>Do you want to try to evade?</h1>
-    <input type="submit" name='yes_EWE_Evade' value='YES'/>
-    <input type="submit" name='no_EWE_Evade' value='NO'/>
+    <input type="submit" name='yes_EWE_Evade' value='YES_evade'/>
+    <input type="submit" name='no_EWE_Evade' value='NO_evade'/>
     {% endif %}
-    {% if game_subphase == 'EWE_Spells' %}
+
+    {% if display['game_subphase'] == 'EWE_Spells' %}
     <h1>Do you want to cast spell before battle?</h1>
     <input type="submit" name='yes_EWE_Spells' value='YES'/>
     <input type="submit" name='no_EWE_Spells' value='NO'/>
     {% endif %}
-    {% if game_subphase == 'EWE_Battle' %}
-    <h1>Battle with {{ enemy_name }}</h1>
+
+    {% if display['game_subphase'] == 'EWE_Battle' %}
+    <h1>Battle with {{ display['card'].title }}</h1>
     <h2>Enemy strength {{ enemy_strength }}</h2>
     <input type="submit" name='dice_roll_enemy' value='dice roll for enemy'/>
     <input type="submit" name='dice_roll_character' value='dice roll for character'/>
