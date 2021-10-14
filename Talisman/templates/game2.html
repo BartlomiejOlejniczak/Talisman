@@ -8,7 +8,7 @@
 
     {% if display['game_phase'] == 'how_many_players' %}
     <p>How many players? 1(not recommended) - 6</p>
-    <input type="number" id="quantity" name="quantity" min="1" max="6">
+    <input type="number" id="quantity" name="quantity" min="1" max="6" value="1">
     <input id="b1" type="submit" name='p' value='sumbit'/>
     {% endif %}
 
@@ -49,8 +49,7 @@
     {% endif %}
     {% if display['game_subphase'] == 'ETS_draw'%}
     <div>
-        <h3>{{ display['card'].title
-            }}</h3>
+        <h3>{{ display['card'].title }}</h3>
         <input type="submit" name='ppp' value='OK'/>
     </div>
     {% endif %}
@@ -70,9 +69,16 @@
 
     {% if display['game_subphase'] == 'EWE_Battle' %}
     <h1>Battle with {{ display['card'].title }}</h1>
-    <h2>Enemy strength {{ enemy_strength }}</h2>
+    <h2>Enemy strength {{ display['enemy_strength'] }}</h2>
+    <h2 style="color: red">Player strength {{ display['player_strength'] }}</h2>
+    {% if display['battle_result'] == '' %}
     <input type="submit" name='dice_roll_enemy' value='dice roll for enemy'/>
     <input type="submit" name='dice_roll_character' value='dice roll for character'/>
+    {% endif %}
+    {% endif %}
+    {% if display['battle_result'] != '' and display['game_subphase'] == 'EWE_after_battle' %}
+    <h3 style="color: red">Battle result: {{ display['battle_result'] }}</h3>
+    <input type="submit" name='end_turn' value='end turn'/>
     {% endif %}
 
 
@@ -80,8 +86,16 @@
         <p id="gp">game phase: {{ display['game_phase'] }}</p>
         <p id="gsp">game subphase: {{ display['game_subphase'] }}</p>
         <p id="pos">dice_roll: {{ display['dice_roll'] }}</p>
+
+
+    </div>
+    <div>
+        <h2 style="color: green">CURRENT PLAYER STATS:</h2>
+
         <p id="cn">current_player title: {{ display['name'] }}</p>
         <p id="cpp">current_player position: {{ display['position'] }}</p>
-    </div>
+        <p >strength trophy : {{ display['strength_trophy'] }}</p>
+        <p >life : {{ display['life'] }}</p>
+        </div>
 </form>
 </body>

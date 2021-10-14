@@ -72,8 +72,8 @@ class Thiev(Character):
     def steal_eq(self):
         pass
 
-
 classes = [Warrior()]
+# classes = [Warrior(), Thiev()]
 
 # db.create_all()
 # db.session.add(Thiev())
