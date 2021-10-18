@@ -41,7 +41,7 @@
     {% endif %}
 
 
-    {% if display['game_phase']  == 'ETS' and display['game_subphase'] != 'ETS_draw' %}
+    {% if display['game_phase'] == 'ETS' and display['game_subphase'] != 'ETS_draw' %}
     <div>
         <h2> Draw a card </h2>
         <input type="submit" name='draw' value='Draw a card'/>
@@ -49,8 +49,8 @@
     {% endif %}
     {% if display['game_subphase'] == 'ETS_draw'%}
 
-        <h3>{{ display['card'].title }}</h3>
-        <input type="submit" name='OK_card' value='OK'/>
+    <h3>{{ display['card'].title }}</h3>
+    <input type="submit" name='OK_card' value='OK'/>
 
     {% endif %}
 
@@ -76,10 +76,30 @@
     <input type="submit" name='dice_roll_character' value='dice roll for character'/>
     {% endif %}
     {% endif %}
-    {% if display['battle_result'] != '' and display['game_subphase'] == 'EWE_after_battle' %}
+    {% if display['battle_result'] != '' and display['game_phase'] == 'EWE_after_battle' %}
     <h3 style="color: red">Battle result: {{ display['battle_result'] }}</h3>
     <input type="submit" name='end_turn' value='end turn'/>
     {% endif %}
+
+
+
+
+    {% if display['game_phase'] == 3 %}
+    <h1>You meet an another Player</h1>
+    <h2>Do you want to ecounter him?</h2>
+    <input type="submit" name='yes' value='YES'/>
+    <input type="submit" name='no' value='NO'/>
+    {% endif %}
+
+    {% if display['game_phase'] == 'EWP'%}
+        {% if display['game_subphase'] == 'EWP_Choose' %}
+            <h1>Choose what you want to do?</h1>
+        <input type="submit" name='str_EWP' value='Use strength'/>
+        <input type="submit" name='craft_EWP' value='Use Magic'/>
+        <input type="submit" name='skill_EWP' value='Use Skill'/>
+    {% endif %}
+
+
 
 
     <div>
@@ -94,8 +114,8 @@
 
         <p id="cn">current_player title: {{ display['name'] }}</p>
         <p id="cpp">current_player position: {{ display['position'] }}</p>
-        <p >strength trophy : {{ display['strength_trophy'] }}</p>
-        <p >life : {{ display['life'] }}</p>
-        </div>
+        <p>strength trophy : {{ display['strength_trophy'] }}</p>
+        <p>life : {{ display['life'] }}</p>
+    </div>
 </form>
 </body>

@@ -195,7 +195,7 @@ class Game:
                 self.display['battle_result'] = 'player_lost'
             else:
                 self.display['battle_result'] = 'draw'
-            self.game_subphase = 'EWE_after_battle'
+            self.game_phase = 'EWE_after_battle'
 
 
     def draw_card(self):
