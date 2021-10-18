@@ -21,6 +21,8 @@ class Player(Game):
         self.battle_strength = 0
         self.strength_trophy = []
         self.craft_trophy = []
+        self.battle_spells = []
+
 
 
 

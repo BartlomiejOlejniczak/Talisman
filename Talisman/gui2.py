@@ -101,7 +101,6 @@ def game():
             else:
                 tal_game.game_phase = 'movement_dice_roll'
             tal_game.display_ref()
-            return render_template('game2.html', display=tal_game.display)
         # CAST SPELLS BEFORE MOVEMENT PHASE
 
         if tal_game.game_phase == 'b4mov_spells':
@@ -150,40 +149,41 @@ def game():
                 if request.form.get('draw'):
                     tal_game.draw_card()
                     tal_game.game_subphase = 'ETS_draw'
-                    tal_game.display_ref()
+                    # tal_game.display_ref()
+                if request.form.get('OK_card'):
                     if tal_game.game_subphase == 'ETS_draw':
                         if tal_game.current_adv_card.type == 'enemy':
                             tal_game.game_phase = 'EWE'
-                            tal_game.display_ref()
+                            if tal_game.current_player.character.evade == True:
+                                tal_game.game_subphase = 'EWE_Evade'
+                            elif len(tal_game.current_player.battle_spells) > 0:
+                                tal_game.game_subphase = 'EWE_Spells'
+                            else:
+                                tal_game.game_subphase = 'EWE_Battle'
+
+                tal_game.display_ref()
 
 
             else:
                 print('space is special')
                 tal_game.end_turn()
                 tal_game.display_ref()
-            return render_template('game2.html', display=tal_game.display)
+            # return render_template('game2.html', display=tal_game.display)
 
         # ECOUNTER WITH ENEMY
         if tal_game.game_phase == 'EWE':
 
-            # check if player can evade enemy
-            if tal_game.game_subphase != 'EWE_Battle':
-                tal_game.game_subphase = 'EWE_Evade'
+            if tal_game.game_subphase == 'EWE_Evade':
+                if request.form.get('yes_EWE_Evade'):
+                    tal_game.end_turn()
+                if request.form.get('no_EWE_Evade'):
 
-                if tal_game.current_player.character.evade == True and tal_game.game_subphase == 'EWE_Evade':
-                    tal_game.display_ref()
-                    # if tal_game.game_subphase == 'EWE_Evade' and tal_game.game_subphase == 'EWE_Evade':
-                    if request.form.get('yes_EWE_Evade') and tal_game.game_subphase == 'EWE_Evade':
-                            tal_game.end_turn()
-                    if request.form.get('no_EWE_Evade'):
-                            tal_game.game_subphase = 'EWE_Spells'
-                            tal_game.display_ref()
-                    else:
+                    if len(tal_game.current_player.battle_spells) > 0:
+                        print(len(tal_game.current_player.battle_spells))
                         tal_game.game_subphase = 'EWE_Spells'
-                        tal_game.display_ref()
-                else:
-                    tal_game.game_subphase = 'EWE_Spells'
-                    tal_game.display_ref()
+                    else:
+                        tal_game.game_subphase = 'EWE_Battle'
+                # tal_game.display_ref()
 
             if tal_game.game_subphase == 'EWE_Spells':
                 if request.form.get('yes_EWE_Spells'):
@@ -193,26 +193,25 @@ def game():
                 if request.form.get('no_EWE_Spells'):
                     tal_game.game_subphase = 'EWE_Battle'
                     print('fuckin no')
-                tal_game.game_subphase = 'EWE_Battle'
-                tal_game.display_ref()
+                # tal_game.display_ref()
 
             if tal_game.game_subphase == 'EWE_Battle':
 
-                # tal_game.enemy_strength = tal_game.current_adv_card.strength
                 if request.form.get('dice_roll_enemy'):
                     tal_game.e_battle_strength()
-                    # tal_game.display_ref()
+
                 if request.form.get('dice_roll_character'):
                     tal_game.current_player.p_battle_strength()
-                    # tal_game.display_ref()
+
                 if tal_game.current_player.battle_strength > tal_game.current_player.strength and tal_game.battle_modificator > 0:
                     tal_game.ecounter_with_enemy()
-                tal_game.display_ref()
+            tal_game.display_ref()
+        # tal_game.display_ref()
 
     if request.form.get('end_turn'):
-            tal_game.end_turn()
+        tal_game.end_turn()
 
-        #
+    #
     return render_template('game2.html', display=tal_game.display)
 
 
