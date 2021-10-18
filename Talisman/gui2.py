@@ -205,6 +205,7 @@ def game():
         # ECOUNTER WITH ANOTHER PLAYER
 
         if tal_game.game_phase == 'EWP':
+            tal_game.game_phase = 'EWP_Choose_PLayer_to_attack'
             tal_game.game_subphase = 'EWP_Choose'
             if request.form.get('skill_EWP'):
                 tal_game.game_subphase = 'EWP_Skills'
