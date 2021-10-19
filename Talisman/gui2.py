@@ -100,7 +100,7 @@ def game():
                 tal_game.game_phase = 'b4mov_spells'
             else:
                 tal_game.game_phase = 'movement_dice_roll'
-            tal_game.display_ref()
+            # tal_game.display_ref()
         # CAST SPELLS BEFORE MOVEMENT PHASE
 
         if tal_game.game_phase == 'b4mov_spells':

@@ -49,6 +49,9 @@ class Game:
         self.battle_modificator = 0
         self.enemy_strength = 0
 
+        self.backward_move_index = ''
+        self.forward_move_index = ''
+
         # self.current_player_battle_strength = ''
 
         self.display = {'name': '', 'game_phase': self.game_phase, 'dice_roll': '', 'position': '',
@@ -58,16 +61,20 @@ class Game:
                         'move_forward': {'name': '',
                                          'cards_to_draw': ''},
                         'card': '', 'enemy_strength': '',
-                        'player_strength': '', 'battle_result': '', 'strength_trophy': '', 'life': ''}
+                        'player_strength': '', 'battle_result': '', 'strength_trophy': '', 'life': '',
+                        'players_position' : {}, 'bmi' : self.backward_move_index, 'fmi' : self.forward_move_index,
+                        'game_field' : cards.ow_game_field}
 
     def display_ref(self):
+        print(f'fmi {self.forward_move_index}')
         self.display['name'] = self.current_player.character.title
         self.display['game_phase'] = self.game_phase
         self.display['dice_roll'] = self.current_player.dice_roll_result
         self.display['position'] = self.current_player.position.name
         self.display['game_subphase'] = self.game_subphase
+        self.display['fmi'] = self.forward_move_index
+        self.display['bmi'] = self.backward_move_index
         if self.game_subphase == 'EWE_Battle':
-            print(tal_game.current_adv_card.strength)
             self.display['enemy_strength'] = tal_game.current_adv_card.strength + self.battle_modificator
         else:
             self.display['enemy_strength'] = self.enemy_strength
@@ -86,8 +93,21 @@ class Game:
         if len(self.current_player.strength_trophy) > 0:
             self.display['strength_trophy'] = self.current_player.strength_trophy
 
-        self.backward_move_index = ''
-        self.forward_move_index = ''
+        # self.backward_move_index = ''
+        # self.forward_move_index = ''
+        try:
+            for player in self.players_in_game:
+                if player != self.current_player:
+                    print(f"ppp{player.character.title} {player.position}")
+                #     print(f" ppp position {self.display['players_position'][player]}")
+                #     if self.display['game_field'][self.display['bmi']] == self.display['players_position'][player]:
+                #         print('uuuuuuuuuuuuwwwwwwaagagagaagaga bedzie ogien')
+        except:
+            print('jakis error')
+
+
+
+
         try:
             self.display['card'] = self.current_adv_card
         except AttributeError:
@@ -124,6 +144,17 @@ class Game:
                 self.display['move_forward']['cards_to_draw'] = cards.ow_game_field[self.forward_move_index].card
             except TypeError:
                 pass
+
+            try:
+                for player in self.players_in_game:
+                    self.display['players_position'][player.character.title] = f'{player.position}'
+                    # self.display['players_position'][player] = f'{player.name}'
+            except:
+                pass
+
+
+
+
 
     def change_subphase(self, input):
         self.game_subphase = input

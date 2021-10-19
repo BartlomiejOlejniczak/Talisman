@@ -24,6 +24,7 @@
     {% endfor %}
     {% endif %}
 
+    <h3>players position: {{ display['players_position']}}</h3>
 
     {% if display['game_phase'] == 'movement_dice_roll' and display['game_subphase'] != 'movement' %}
     <h1>Please roll the dice to begin movement</h1>
@@ -31,11 +32,34 @@
     {% endif %}
     {% if display['game_phase'] == 'movement_dice_roll' and display['game_subphase'] == 'movement' %}
     <div>
-        <h2>{{ display['move_backward']['name'] }} {{ display['move_backward']['cards_to_draw'] }}</h2>
+        <h2>{{ display['move_backward']['name'] }} cards to draw: {{ display['move_backward']['cards_to_draw'] }}</h2>
+        <h2>nazwa techniczna {{ display['game_field'][ display['bmi'] ]}}</h2>
+        {% for player in display['players_position'] %}
+        {% if player != display['name'] %}
+<!--        {{ display['players_position'][player] }}-->
+        <h6>{{ display['players_position'][player] }} </h6>
+        {% if display['game_field'][display['bmi']] == display['players_position'][player] %}
+        <h5>test</h5>
+        <h2> {{ display['players_position'][player] }}</h2>
+        {% endif %}
+        {% endif %}
+        {% endfor %}
         <input type="submit" name='backward' value='Go to {{ display["move_backward"]["name"]}}'/>
     </div>
     <div>
-        <h2>{{ display['move_forward']['name'] }} {{ display['move_forward']['cards_to_draw'] }}</h2>
+        <h2>{{ display['move_forward']['name'] }} cards to draw: {{ display['move_forward']['cards_to_draw'] }}</h2>
+        <h2> {{ display['game_field'][ display['fmi'] ]}}</h2>
+              {% for player in display['players_position'] %}
+        {% if player != display['name'] %}
+<!--        {{ display['players_position'][player] }}-->
+        <h6>{{ player }}{{ display['players_position'][player] }} </h6>
+        {% if display['game_field'][display['fmi']] == display['players_position'][player] %}
+        <h5>test</h5>
+        <h2> {{ display['players_position'][player] }}</h2>
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+
         <input type="submit" name='forward' value='Go to {{  display["move_forward"]["name"]}}'/>
     </div>
     {% endif %}
@@ -82,8 +106,6 @@
     {% endif %}
 
 
-
-
     {% if display['game_phase'] == 3 %}
     <h1>You meet an another Player</h1>
     <h2>Do you want to ecounter him?</h2>
@@ -92,18 +114,17 @@
     {% endif %}
 
     {% if display['game_phase'] == 'EWP'%}
-         {% if display['game_subphase'] == 'EWP_Choose_PLayer_to_attack' %}
-        {% endif %}
-
-
-        {% if display['game_subphase'] == 'EWP_Choose' %}
-            <h1>Choose what you want to do?</h1>
-        <input type="submit" name='str_EWP' value='Use strength'/>
-        <input type="submit" name='craft_EWP' value='Use Magic'/>
-        <input type="submit" name='skill_EWP' value='Use Skill'/>
+    {% endif %}
+    {% if display['game_subphase'] == 'EWP_Choose_PLayer_to_attack' %}
     {% endif %}
 
 
+    {% if display['game_subphase'] == 'EWP_Choose' %}
+    <h1>Choose what you want to do?</h1>
+    <input type="submit" name='str_EWP' value='Use strength'/>
+    <input type="submit" name='craft_EWP' value='Use Magic'/>
+    <input type="submit" name='skill_EWP' value='Use Skill'/>
+    {% endif %}
 
 
     <div>
