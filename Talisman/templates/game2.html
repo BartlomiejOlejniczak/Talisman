@@ -7,60 +7,56 @@
     <h1 id="message"></h1>
 
     {% if display['game_phase'] == 'how_many_players' %}
-    <p>How many players? 1(not recommended) - 6</p>
-    <input type="number" id="quantity" name="quantity" min="1" max="6" value="1">
-    <input id="b1" type="submit" name='p' value='sumbit'/>
+    <div>
+        <p>How many players? 1(not recommended) - 6</p>
+        <input type="number" id="quantity" name="quantity" min="1" max="6" value="1">
+        <input id="b1" type="submit" name='p' value='sumbit'/>
+    </div>
     {% endif %}
 
 
     {% if display['game_phase'] == 'b4mov_spells' %}
-    <h1>Do you want to cast spell before movement?</h1>
-    <input type="submit" name='yes' value='YES'/>
-    <input type="submit" name='no' value='NO'/>
-    {% endif %}
-    {% if game_phase == 'b4mov_spells_casting' %}
-    <h1>Which spell do you want to cast?</h1>
-    {% for spell in spells %}
-    {% endfor %}
+    <div>
+        <h1>Do you want to cast spell before movement?</h1>
+        <input type="submit" name='yes' value='YES'/>
+        <input type="submit" name='no' value='NO'/>
+        {% endif %}
+        {% if game_phase == 'b4mov_spells_casting' %}
+        <h1>Which spell do you want to cast?</h1>
+        {% for spell in spells %}
+        {% endfor %}
+    </div>
     {% endif %}
 
-    <h3>players position: {{ display['players_position']}}</h3>
+    <!--    <h3>players position: {{ display['players_position']}}</h3>-->
 
     {% if display['game_phase'] == 'movement_dice_roll' and display['game_subphase'] != 'movement' %}
-    <h1>Please roll the dice to begin movement</h1>
-    <input type="submit" name='dice_roll' value='dice roll'/>
-    {% endif %}
-    {% if display['game_phase'] == 'movement_dice_roll' and display['game_subphase'] == 'movement' %}
     <div>
-        <h2>{{ display['move_backward']['name'] }} cards to draw: {{ display['move_backward']['cards_to_draw'] }}</h2>
-        <h2>nazwa techniczna {{ display['game_field'][ display['bmi'] ]}}</h2>
-        {% for player in display['players_position'] %}
-        {% if player != display['name'] %}
-<!--        {{ display['players_position'][player] }}-->
-        <h6>{{ display['players_position'][player] }} </h6>
-        {% if display['game_field'][display['bmi']] == display['players_position'][player] %}
-        <h5>test</h5>
-        <h2> {{ display['players_position'][player] }}</h2>
+        <h1>Please roll the dice to begin movement</h1>
+        <input type="submit" name='dice_roll' value='dice roll'/>
         {% endif %}
-        {% endif %}
-        {% endfor %}
-        <input type="submit" name='backward' value='Go to {{ display["move_backward"]["name"]}}'/>
-    </div>
-    <div>
-        <h2>{{ display['move_forward']['name'] }} cards to draw: {{ display['move_forward']['cards_to_draw'] }}</h2>
-        <h2> {{ display['game_field'][ display['fmi'] ]}}</h2>
-              {% for player in display['players_position'] %}
-        {% if player != display['name'] %}
-<!--        {{ display['players_position'][player] }}-->
-        <h6>{{ player }}{{ display['players_position'][player] }} </h6>
-        {% if display['game_field'][display['fmi']] == display['players_position'][player] %}
-        <h5>test</h5>
-        <h2> {{ display['players_position'][player] }}</h2>
-        {% endif %}
-        {% endif %}
-        {% endfor %}
+        <div style="width : 250px">
+            {% if display['game_phase'] == 'movement_dice_roll' and display['game_subphase'] == 'movement' %}
+            <div style="border: 1px black solid">
+                <h2>{{ display['move_backward']['name'] }} cards to draw: {{ display['move_backward']['cards_to_draw']
+                    }}</h2>
+                <h2>{{ display['game_field'][ display['bmi'] ]}}</h2>
+                {% for player in display['players_position_bkw'] %}
+                <h6>{{ player }} </h6>
+                {% endfor %}
+                <input type="submit" name='backward' value='Go to {{ display["move_backward"]["name"]}}'/>
+            </div>
+            <div style="border: 1px black solid">
+                <h2>{{ display['move_forward']['name'] }} cards to draw: {{ display['move_forward']['cards_to_draw']
+                    }}</h2>
+                <h2> {{ display['game_field'][ display['fmi'] ]}}</h2>
+                {% for player in display['players_position_fwd'] %}
+                <h6>{{ player }} </h6>
+                {% endfor %}
 
-        <input type="submit" name='forward' value='Go to {{  display["move_forward"]["name"]}}'/>
+                <input type="submit" name='forward' value='Go to {{  display["move_forward"]["name"]}}'/>
+            </div>
+        </div>
     </div>
     {% endif %}
 
@@ -80,37 +76,45 @@
 
 
     {% if display['game_subphase'] == 'EWE_Evade' %}
-    <h1>Do you want to try to evade?</h1>
-    <input type="submit" name='yes_EWE_Evade' value='YES_evade'/>
-    <input type="submit" name='no_EWE_Evade' value='NO_evade'/>
+    <div>
+        <h1>Do you want to try to evade?</h1>
+        <input type="submit" name='yes_EWE_Evade' value='YES_evade'/>
+        <input type="submit" name='no_EWE_Evade' value='NO_evade'/>
+    </div>
     {% endif %}
 
     {% if display['game_subphase'] == 'EWE_Spells' %}
-    <h1>Do you want to cast spell before battle?</h1>
-    <input type="submit" name='yes_EWE_Spells' value='YES'/>
-    <input type="submit" name='no_EWE_Spells' value='NO'/>
+    <div>
+        <h1>Do you want to cast spell before battle?</h1>
+        <input type="submit" name='yes_EWE_Spells' value='YES'/>
+        <input type="submit" name='no_EWE_Spells' value='NO'/>
+    </div>
     {% endif %}
 
     {% if display['game_subphase'] == 'EWE_Battle' %}
-    <h1>Battle with {{ display['card'].title }}</h1>
-    <h2>Enemy strength {{ display['enemy_strength'] }}</h2>
-    <h2 style="color: red">Player strength {{ display['player_strength'] }}</h2>
-    {% if display['battle_result'] == '' %}
-    <input type="submit" name='dice_roll_enemy' value='dice roll for enemy'/>
-    <input type="submit" name='dice_roll_character' value='dice roll for character'/>
-    {% endif %}
-    {% endif %}
-    {% if display['battle_result'] != '' and display['game_phase'] == 'EWE_after_battle' %}
-    <h3 style="color: red">Battle result: {{ display['battle_result'] }}</h3>
-    <input type="submit" name='end_turn' value='end turn'/>
+    <div>
+        <h1>Battle with {{ display['card'].title }}</h1>
+        <h2>Enemy strength {{ display['enemy_strength'] }}</h2>
+        <h2 style="color: red">Player strength {{ display['player_strength'] }}</h2>
+        {% if display['battle_result'] == '' %}
+        <input type="submit" name='dice_roll_enemy' value='dice roll for enemy'/>
+        <input type="submit" name='dice_roll_character' value='dice roll for character'/>
+        {% endif %}
+        {% endif %}
+        {% if display['battle_result'] != '' and display['game_phase'] == 'EWE_after_battle' %}
+        <h3 style="color: red">Battle result: {{ display['battle_result'] }}</h3>
+        <input type="submit" name='end_turn' value='end turn'/>
+    </div>
     {% endif %}
 
 
     {% if display['game_phase'] == 3 %}
-    <h1>You meet an another Player</h1>
-    <h2>Do you want to ecounter him?</h2>
-    <input type="submit" name='yes' value='YES'/>
-    <input type="submit" name='no' value='NO'/>
+    <div>
+        <h1>You meet an another Player</h1>
+        <h2>Do you want to ecounter him?</h2>
+        <input type="submit" name='yes' value='YES'/>
+        <input type="submit" name='no' value='NO'/>
+    </div>
     {% endif %}
 
     {% if display['game_phase'] == 'EWP'%}
@@ -121,9 +125,11 @@
 
     {% if display['game_subphase'] == 'EWP_Choose' %}
     <h1>Choose what you want to do?</h1>
-    <input type="submit" name='str_EWP' value='Use strength'/>
-    <input type="submit" name='craft_EWP' value='Use Magic'/>
-    <input type="submit" name='skill_EWP' value='Use Skill'/>
+    <div>
+        <input type="submit" name='str_EWP' value='Use strength'/>
+        <input type="submit" name='craft_EWP' value='Use Magic'/>
+        <input type="submit" name='skill_EWP' value='Use Skill'/>
+    </div>
     {% endif %}
 
 
@@ -131,8 +137,6 @@
         <p id="gp">game phase: {{ display['game_phase'] }}</p>
         <p id="gsp">game subphase: {{ display['game_subphase'] }}</p>
         <p id="pos">dice_roll: {{ display['dice_roll'] }}</p>
-
-
     </div>
     <div>
         <h2 style="color: green">CURRENT PLAYER STATS:</h2>
@@ -141,6 +145,18 @@
         <p id="cpp">current_player position: {{ display['position'] }}</p>
         <p>strength trophy : {{ display['strength_trophy'] }}</p>
         <p>life : {{ display['life'] }}</p>
+    </div>
+    <div style="width : 150px ;  float : right, position: fixed; top:0">
+        {% for card in display['game_field'] %}
+        <div style="border :1px solid black ; height : 120px">
+            <h5> {{card}}</h5>
+            {% for player in display['players_position' ] %}
+            {% if display['players_position'][player] == card %}
+            <h6>{{ player }}</h6>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endfor %}
     </div>
 </form>
 </body>

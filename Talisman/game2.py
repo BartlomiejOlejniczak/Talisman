@@ -63,7 +63,7 @@ class Game:
                         'card': '', 'enemy_strength': '',
                         'player_strength': '', 'battle_result': '', 'strength_trophy': '', 'life': '',
                         'players_position' : {}, 'bmi' : self.backward_move_index, 'fmi' : self.forward_move_index,
-                        'game_field' : cards.ow_game_field}
+                        'game_field' : cards.ow_game_field, 'players_position_fwd' : {}, 'players_position_bkw' : {}}
 
     def display_ref(self):
         print(f'fmi {self.forward_move_index}')
@@ -93,20 +93,18 @@ class Game:
         if len(self.current_player.strength_trophy) > 0:
             self.display['strength_trophy'] = self.current_player.strength_trophy
 
-        # self.backward_move_index = ''
-        # self.forward_move_index = ''
         try:
             for player in self.players_in_game:
                 if player != self.current_player:
-                    print(f"ppp{player.character.title} {player.position}")
-                #     print(f" ppp position {self.display['players_position'][player]}")
-                #     if self.display['game_field'][self.display['bmi']] == self.display['players_position'][player]:
-                #         print('uuuuuuuuuuuuwwwwwwaagagagaagaga bedzie ogien')
+                        if player.position == cards.ow_game_field[self.backward_move_index]:
+                            self.display['players_position_bkw'][player.character.title] = f'{player.position}'
+                        if player.position == cards.ow_game_field[self.forward_move_index]:
+                            self.display['players_position_fwd'][player.character.title] = f'{player.position}'
+                        else:
+                            self.display['players_position_bkw']={}
+                            self.display['players_position_fwd']={}
         except:
-            print('jakis error')
-
-
-
+            pass
 
         try:
             self.display['card'] = self.current_adv_card
@@ -147,8 +145,7 @@ class Game:
 
             try:
                 for player in self.players_in_game:
-                    self.display['players_position'][player.character.title] = f'{player.position}'
-                    # self.display['players_position'][player] = f'{player.name}'
+                    self.display['players_position'][player.character.title] = player.position
             except:
                 pass
 
@@ -169,7 +166,6 @@ class Game:
 
     def dice_roll_double(self):
         result = random.randint(2, 12)
-        # print(f' wynik rzutu: {result}')
         self.dice_roll_result = result
         self.display_ref()
         return result
@@ -194,7 +190,6 @@ class Game:
             if p != self.current_player:
                 if p.position == self.current_player.position:
                     print('true')
-                    # print(p.character.title)
                     return True
                 else:
                     print('check false')
@@ -213,15 +208,11 @@ class Game:
 
     def ecounter_with_enemy(self):
         if self.game_subphase != 'EWE_after_battle':
-            print('ecounter wiuth enemy')
-            print(self.game_subphase)
             if self.current_player.battle_strength > self.enemy_strength:
-                print(f'enemy strength {self.enemy_strength}')
                 self.current_player.strength_trophy.append(self.current_adv_card)
                 self.display['battle_result'] = 'player_won'
 
             elif self.current_player.battle_strength < self.enemy_strength:
-                print(f'enemy strength {self.enemy_strength}')
                 self.current_player.life -= 1
                 self.display['battle_result'] = 'player_lost'
             else:
