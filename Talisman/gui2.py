@@ -126,20 +126,25 @@ def game():
                 tal_game.current_player.move_backward(tal_game.current_player.dice_roll_result)
                 tal_game.game_phase = 3
 
-            tal_game.display_ref()
+            # tal_game.display_ref()
 
-            if tal_game.game_phase == 3:
-                # check if is another player on space
-                if not tal_game.check_player_position():
-                    # if not go to space ecounter
+        if tal_game.game_phase == 3:
+            tal_game.game_subphase = ''
+            # check if is another player on space
+            if not tal_game.check_player_position():
+                # if not go to space ecounter
+                tal_game.game_phase = 'ETS'
+            else:
+                # if yes choose if you want to ecounter character
+                if request.form.get('yes_ETS'):
+                    # print(' yes_ETS')
+                    tal_game.game_phase = 'EWP'
+
+
+                if request.form.get('no_ETS'):
+                    print(' no_ETS')
                     tal_game.game_phase = 'ETS'
-                else:
-                    # if yes choose if you want to ecounter character
-                    if request.form.get('yes'):
-                        tal_game.game_phase = 'ETP'
-                    if request.form.get('no'):
-                        tal_game.game_phase = 'ETS'
-                tal_game.display_ref()
+            # tal_game.display_ref()
 
         # ECOUNTER the SPACE  PHASE
 
@@ -162,13 +167,13 @@ def game():
                             else:
                                 tal_game.game_subphase = 'EWE_Battle'
 
-                tal_game.display_ref()
+                # tal_game.display_ref()
 
 
             else:
                 print('space is special')
                 tal_game.end_turn()
-                tal_game.display_ref()
+                # tal_game.display_ref()
             # return render_template('game2.html', display=tal_game.display)
 
         # ECOUNTER WITH ENEMY
@@ -200,22 +205,50 @@ def game():
 
                 if tal_game.current_player.battle_strength > tal_game.current_player.strength and tal_game.battle_modificator > 0:
                     tal_game.ecounter_with_enemy()
-            tal_game.display_ref()
+            # tal_game.display_ref()
 
         # ECOUNTER WITH ANOTHER PLAYER
 
         if tal_game.game_phase == 'EWP':
-            tal_game.game_phase = 'EWP_Choose_PLayer_to_attack'
-            tal_game.game_subphase = 'EWP_Choose'
-            if request.form.get('skill_EWP'):
-                tal_game.game_subphase = 'EWP_Skills'
-            if request.form.get('strength_EWP'):
-                tal_game.game_subphase = 'EWP_strength'
-            if request.form.get('craft_EWP'):
-                tal_game.game_subphase = 'EWP_craft'
+            tal_game.sub_phase = 'EWP_Choose_Player_to_attack'
+            print(tal_game.display['players_position'])
+            if tal_game.game_subphase == 'EWP_Choose_Player_to_attack':
+                if request.form:
+                    print(request.form.keys(0))
+            # for p in tal_game.players_in_game:
+            #     print(f"gracze: {p} i ich pozycje {p.position}")
+            #
+            #     # print (f"pozycja {player.p.character.position} gracz: {p}" )
+            #     print(tal_game.display['position'])
+
+                # for key,  value in request.form.items():
+                #     print("key: {0}, value: {1}".format(key, value))
+                #     k = key
+                #     print(k)\
+                # f = request.form
+                # if f:
+                #     for key in f.keys():
+                #         for value in f.getlist(key):
+                #             print (key, ":", value)
+
+                # f = request.form
+
+                # for key in request.form.keys():
+                #     print(key)
+                #     for value in request.form.getlist(key):
+                #         print(key, ":", value)
+            # if request.form.get(' '):
+            #     tal_game.game_subphase = 'EWP_Choose'
+            if tal_game.game_subphase == 'EWP_Choose':
+                if request.form.get('skill_EWP'):
+                    tal_game.game_subphase = 'EWP_Skills'
+                if request.form.get('strength_EWP'):
+                    tal_game.game_subphase = 'EWP_strength'
+                if request.form.get('craft_EWP'):
+                    tal_game.game_subphase = 'EWP_craft'
 
 
-
+        tal_game.display_ref()
 
     if request.form.get('end_turn'):
         tal_game.end_turn()

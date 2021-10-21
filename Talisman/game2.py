@@ -63,14 +63,15 @@ class Game:
                         'card': '', 'enemy_strength': '',
                         'player_strength': '', 'battle_result': '', 'strength_trophy': '', 'life': '',
                         'players_position' : {}, 'bmi' : self.backward_move_index, 'fmi' : self.forward_move_index,
-                        'game_field' : cards.ow_game_field, 'players_position_fwd' : {}, 'players_position_bkw' : {}}
+                        'game_field' : cards.ow_game_field, 'players_position_fwd' : {}, 'players_position_bkw' : {},
+                        'players_in_game' : self.players_in_game}
 
     def display_ref(self):
-        print(f'fmi {self.forward_move_index}')
-        self.display['name'] = self.current_player.character.title
+        self.display['players_in_game'] = self.players_in_game
+        self.display['name'] = self.current_player
         self.display['game_phase'] = self.game_phase
         self.display['dice_roll'] = self.current_player.dice_roll_result
-        self.display['position'] = self.current_player.position.name
+        self.display['position'] = self.current_player.position
         self.display['game_subphase'] = self.game_subphase
         self.display['fmi'] = self.forward_move_index
         self.display['bmi'] = self.backward_move_index
@@ -93,13 +94,23 @@ class Game:
         if len(self.current_player.strength_trophy) > 0:
             self.display['strength_trophy'] = self.current_player.strength_trophy
 
+        # try:
+        #     for player in self.players_in_game:
+        #         if player != self.current_player:
+        #                 if player.position == cards.ow_game_field[self.backward_move_index]:
+        #                     self.display['players_position_bkw'][player.character.title] = f'{player.position}'
+        #                 if player.position == cards.ow_game_field[self.forward_move_index]:
+        #                     self.display['players_position_fwd'][player.character.title] = f'{player.position}'
+        #                 else:
+        #                     self.display['players_position_bkw']={}
+        #                     self.display['players_position_fwd']={}
         try:
             for player in self.players_in_game:
                 if player != self.current_player:
                         if player.position == cards.ow_game_field[self.backward_move_index]:
-                            self.display['players_position_bkw'][player.character.title] = f'{player.position}'
+                            self.display['players_position_bkw'][player.character.title] = player.position
                         if player.position == cards.ow_game_field[self.forward_move_index]:
-                            self.display['players_position_fwd'][player.character.title] = f'{player.position}'
+                            self.display['players_position_fwd'][player.character.title] = player.position
                         else:
                             self.display['players_position_bkw']={}
                             self.display['players_position_fwd']={}
@@ -145,7 +156,7 @@ class Game:
 
             try:
                 for player in self.players_in_game:
-                    self.display['players_position'][player.character.title] = player.position
+                    self.display['players_position'][player] = player.position
             except:
                 pass
 
@@ -158,7 +169,8 @@ class Game:
         self.display_ref()
 
     def dice_roll_single(self):
-        result = random.randint(1, 6)
+        # result = random.randint(1, 6)
+        result = 1
         self.dice_roll_result = result
         print(f'wynik rzuty kostka {self.dice_roll_result}')
         # self.display_ref()

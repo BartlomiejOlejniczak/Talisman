@@ -9,7 +9,7 @@
     {% if display['game_phase'] == 'how_many_players' %}
     <div>
         <p>How many players? 1(not recommended) - 6</p>
-        <input type="number" id="quantity" name="quantity" min="1" max="6" value="1">
+        <input type="number" id="quantity" name="quantity" min="1" max="6" value="2">
         <input id="b1" type="submit" name='p' value='sumbit'/>
     </div>
     {% endif %}
@@ -112,14 +112,24 @@
     <div>
         <h1>You meet an another Player</h1>
         <h2>Do you want to ecounter him?</h2>
-        <input type="submit" name='yes' value='YES'/>
-        <input type="submit" name='no' value='NO'/>
+        <input type="submit" name='yes_ETS' value='YES'/>
+        <input type="submit" name='no_ETS' value='NO'/>
     </div>
     {% endif %}
 
-    {% if display['game_phase'] == 'EWP'%}
-    {% endif %}
-    {% if display['game_subphase'] == 'EWP_Choose_PLayer_to_attack' %}
+
+    {% if display['game_phase'] == 'EWP_Choose_Player_to_attack'%}
+    <div>
+        <h2> Choose player to ecounter with</h2>
+        {% for player in display['players_in_game'] %}
+        {% if player.position == display['position'] %}
+        {% if player != display['name']%}
+        <input type="submit" name="{{ player.character.title }}" value="{{ player.character.title }}"/>
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+        {% if display['game_subphase'] == 'EWP_Choose_PLayer_to_attack' %}
+    </div>
     {% endif %}
 
 
@@ -131,6 +141,7 @@
         <input type="submit" name='skill_EWP' value='Use Skill'/>
     </div>
     {% endif %}
+    {% endif %}
 
 
     <div>
@@ -140,9 +151,10 @@
     </div>
     <div>
         <h2 style="color: green">CURRENT PLAYER STATS:</h2>
-
-        <p id="cn">current_player title: {{ display['name'] }}</p>
-        <p id="cpp">current_player position: {{ display['position'] }}</p>
+        {% if display['name'] != ""%}
+        <p id="cn">current_player title: {{ display['name'].character.title }}</p>
+        {% endif %}
+        <p id="cpp">current_player position: {{ display['position'].name }}</p>
         <p>strength trophy : {{ display['strength_trophy'] }}</p>
         <p>life : {{ display['life'] }}</p>
     </div>
@@ -150,9 +162,9 @@
         {% for card in display['game_field'] %}
         <div style="border :1px solid black ; height : 120px">
             <h5> {{card}}</h5>
-            {% for player in display['players_position' ] %}
+            {% for player in display['players_position'] %}
             {% if display['players_position'][player] == card %}
-            <h6>{{ player }}</h6>
+            <h6>{{ player.character.title }}</h6>
             {% endif %}
             {% endfor %}
         </div>
