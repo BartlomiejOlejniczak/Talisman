@@ -205,16 +205,15 @@ def game():
 
                 if tal_game.current_player.battle_strength > tal_game.current_player.strength and tal_game.battle_modificator > 0:
                     tal_game.ecounter_with_enemy()
-            # tal_game.display_ref()
+            tal_game.display_ref()
 
         # ECOUNTER WITH ANOTHER PLAYER
 
         if tal_game.game_phase == 'EWP':
-            tal_game.sub_phase = 'EWP_Choose_Player_to_attack'
-            print(tal_game.display['players_position'])
+            tal_game.game_subphase = 'EWP_Choose_Player_to_attack'
             if tal_game.game_subphase == 'EWP_Choose_Player_to_attack':
                 if request.form:
-                    print(request.form.keys(0))
+                    print(request.form.keys())
             # for p in tal_game.players_in_game:
             #     print(f"gracze: {p} i ich pozycje {p.position}")
             #

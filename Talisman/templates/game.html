@@ -16,6 +16,7 @@
 
 
     {% if game_phase == 'b4mov_spells' %}
+    <div>
     <h1>Do you want to cast spell before movement?</h1>
     <input type="submit" name='yes' value='YES'/>
     <input type="submit" name='no' value='NO'/>
@@ -24,6 +25,7 @@
     <h1>Which spell do you want to cast?</h1>
     {% for spell in spells %}
     {% endfor %}
+        </div>
     {% endif %}
 
 

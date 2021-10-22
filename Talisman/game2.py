@@ -54,8 +54,7 @@ class Game:
 
         # self.current_player_battle_strength = ''
 
-        self.display = {'name': '', 'game_phase': self.game_phase, 'dice_roll': '', 'position': '',
-                        'game_subphase': '',
+        self.display = { 'position': '',
                         'move_backward': {'name': '',
                                           'cards_to_draw': ''},
                         'move_forward': {'name': '',
@@ -64,15 +63,12 @@ class Game:
                         'player_strength': '', 'battle_result': '', 'strength_trophy': '', 'life': '',
                         'players_position' : {}, 'bmi' : self.backward_move_index, 'fmi' : self.forward_move_index,
                         'game_field' : cards.ow_game_field, 'players_position_fwd' : {}, 'players_position_bkw' : {},
-                        'players_in_game' : self.players_in_game}
+                        'players_in_game' : self.players_in_game, 'game' : self}
 
     def display_ref(self):
+        self.display['game'] = self
         self.display['players_in_game'] = self.players_in_game
-        self.display['name'] = self.current_player
-        self.display['game_phase'] = self.game_phase
-        self.display['dice_roll'] = self.current_player.dice_roll_result
         self.display['position'] = self.current_player.position
-        self.display['game_subphase'] = self.game_subphase
         self.display['fmi'] = self.forward_move_index
         self.display['bmi'] = self.backward_move_index
         if self.game_subphase == 'EWE_Battle':
@@ -94,16 +90,6 @@ class Game:
         if len(self.current_player.strength_trophy) > 0:
             self.display['strength_trophy'] = self.current_player.strength_trophy
 
-        # try:
-        #     for player in self.players_in_game:
-        #         if player != self.current_player:
-        #                 if player.position == cards.ow_game_field[self.backward_move_index]:
-        #                     self.display['players_position_bkw'][player.character.title] = f'{player.position}'
-        #                 if player.position == cards.ow_game_field[self.forward_move_index]:
-        #                     self.display['players_position_fwd'][player.character.title] = f'{player.position}'
-        #                 else:
-        #                     self.display['players_position_bkw']={}
-        #                     self.display['players_position_fwd']={}
         try:
             for player in self.players_in_game:
                 if player != self.current_player:
@@ -230,7 +216,8 @@ class Game:
             else:
                 self.display['battle_result'] = 'draw'
             self.game_phase = 'EWE_after_battle'
-
+            print(self.game_subphase)
+            return self.game_subphase
 
     def draw_card(self):
         card = random.choice(self.adventure_cards)
@@ -239,16 +226,27 @@ class Game:
         self.current_adv_card = card
         return card
 
-
     def game_is_on(self):
         return True
 
+    ############# EWE ######################################
 
-############# EWE ######################################
+    def ewe_evade(self):
+        while  self.game_subphase == 'EWE_Evade':
+            if request.form.get('yes_EWE_Evade'):
+                print('bbbb')
 
-    def eve_evade(self):
-        if self.current_player.character.evade == True:
-            pass
+
+    ########## ETS #####################################
+
+    def draw(self):
+        self.draw_card()
+        self.game_subphase = 'ETS_draw'
+        self.display_ref()
+        if self.game_subphase == 'ETS_draw':
+            if self.current_adv_card.type == 'enemy':
+                self.game_phase = 'EWE'
+                self.display_ref()
 
 
 tal_game = Game()
