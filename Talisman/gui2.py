@@ -213,7 +213,19 @@ def game():
             tal_game.game_subphase = 'EWP_Choose_Player_to_attack'
             if tal_game.game_subphase == 'EWP_Choose_Player_to_attack':
                 if request.form:
-                    print(request.form.keys())
+                    if list(request.form.keys())[0] != 'yes_ETS':
+                        for player in tal_game.players_in_game:
+                            if player == list(request.form.keys())[0]:
+                                tal_game.pvp_player = player
+                                #
+                                print(f"PVP PLAYER : {'true'}")
+                                tal_game.game_subphase = 'EWP_Choose'
+                            else:
+                                print('pvp false')
+                else:
+                    print('else')
+
+
             # for p in tal_game.players_in_game:
             #     print(f"gracze: {p} i ich pozycje {p.position}")
             #

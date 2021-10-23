@@ -46,24 +46,24 @@ class Game:
         self.current_adventures_cards = []
         self.current_adv_card = ''
         self.current_player = ''
+        self.pvp_player = ''
         self.battle_modificator = 0
         self.enemy_strength = 0
+
 
         self.backward_move_index = ''
         self.forward_move_index = ''
 
         # self.current_player_battle_strength = ''
 
-        self.display = { 'position': '',
-                        'move_backward': {'name': '',
-                                          'cards_to_draw': ''},
+        self.display = {'position': '', 'move_backward': {'name': '', 'cards_to_draw': ''},
                         'move_forward': {'name': '',
                                          'cards_to_draw': ''},
                         'card': '', 'enemy_strength': '',
                         'player_strength': '', 'battle_result': '', 'strength_trophy': '', 'life': '',
-                        'players_position' : {}, 'bmi' : self.backward_move_index, 'fmi' : self.forward_move_index,
-                        'game_field' : cards.ow_game_field, 'players_position_fwd' : {}, 'players_position_bkw' : {},
-                        'players_in_game' : self.players_in_game, 'game' : self}
+                        'players_position': {}, 'bmi': self.backward_move_index, 'fmi': self.forward_move_index,
+                        'game_field': cards.ow_game_field, 'players_position_fwd': {}, 'players_position_bkw': {},
+                        'players_in_game': self.players_in_game, 'game': self}
 
     def display_ref(self):
         self.display['game'] = self
@@ -93,13 +93,13 @@ class Game:
         try:
             for player in self.players_in_game:
                 if player != self.current_player:
-                        if player.position == cards.ow_game_field[self.backward_move_index]:
-                            self.display['players_position_bkw'][player.character.title] = player.position
-                        if player.position == cards.ow_game_field[self.forward_move_index]:
-                            self.display['players_position_fwd'][player.character.title] = player.position
-                        else:
-                            self.display['players_position_bkw']={}
-                            self.display['players_position_fwd']={}
+                    if player.position == cards.ow_game_field[self.backward_move_index]:
+                        self.display['players_position_bkw'][player.character.title] = player.position
+                    if player.position == cards.ow_game_field[self.forward_move_index]:
+                        self.display['players_position_fwd'][player.character.title] = player.position
+                    else:
+                        self.display['players_position_bkw'] = {}
+                        self.display['players_position_fwd'] = {}
         except:
             pass
 
@@ -146,10 +146,6 @@ class Game:
             except:
                 pass
 
-
-
-
-
     def change_subphase(self, input):
         self.game_subphase = input
         self.display_ref()
@@ -181,6 +177,7 @@ class Game:
         self.display['battle_result'] = ''
         self.display['strength_trophy'] = ''
         self.current_player = self.players_in_game[self.cp_index]
+        self.pvp_player = ''
         self.display_ref()
 
     def check_player_position(self):
@@ -232,10 +229,9 @@ class Game:
     ############# EWE ######################################
 
     def ewe_evade(self):
-        while  self.game_subphase == 'EWE_Evade':
+        while self.game_subphase == 'EWE_Evade':
             if request.form.get('yes_EWE_Evade'):
                 print('bbbb')
-
 
     ########## ETS #####################################
 
