@@ -162,23 +162,33 @@
     {% if display['game'].game_phase != 'how_many_players' %}
     <div style="border: 1px solid black">
         <h2 style="color: green">CURRENT PLAYER : {{ display['game'].current_player.character.title }} </h2>
-<!--        {% if display['game'].current_player != "" %}-->
-        <p id="cn">current_player title: {{ display['game'].current_player.character.title }}</p>
-<!--        {% endif %}-->
-        <p id="cpp">current_player position: {{ display['position'].name }}</p>
-        <p>strength trophy : {{ display['strength_trophy'] }}</p>
+        <p id="cpp">current_player position: {{ display['position'] }}</p>
+
+        <p>strength : {{ display['game'].current_player.strength }}</p>
         <p>life : {{ display['life'] }}</p>
+        <p>strength trophy : {{ display['strength_trophy'] }}</p>
+
     </div>
     {% endif %}
     {% if display['game'].game_subphase == 'EWP_Choose' %}
-    <div style="border: 1px solid black">
-        <h2 style="color: green">CURRENT PLAYER STATS:</h2>
+    <div style="border: 1px solid black; order:3">
         {% if display['game'].pvp_player != ""%}
-        <p id="cn">ATTACKED PLAYER : {{ display['game'].pvp_player.character.title }}</p>
+        <h2 style="color: green">ATTACKED PLAYER : {{ display['game'].pvp_player.character.title }}</h2>
         {% endif %}
-<!--        <p id="cpp">current_player position: {{ display['position'].name }}</p>-->
-        <p>strength trophy : {{ display['strength_trophy'] }}</p>
+        <!--        <p id="cpp">current_player position: {{ display['position'].name }}</p>-->
+        <p>strength : {{ display['game'].pvp_player.strength }}</p>
         <p>life : {{ display['game'].pvp_player.life }}</p>
+        <p>strength trophy : {{ display['strength_trophy'] }}</p>
+    </div>
+    {% endif %}
+    {% if display['game'].game_subphase == 'EWP_Choose' %}
+    <div style="order: 2">
+        <h1>Choose what you want to do?</h1>
+        <div>
+            <input type="submit" name='str_EWP' value='Use strength'/>
+            <input type="submit" name='craft_EWP' value='Use Magic'/>
+            <input type="submit" name='skill_EWP' value='Use Skill'/>
+        </div>
     </div>
     {% endif %}
 
