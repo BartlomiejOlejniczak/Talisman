@@ -165,41 +165,86 @@
         <p id="cpp">current_player position: {{ display['position'] }}</p>
 
         <p>strength : {{ display['game'].current_player.strength }}</p>
+        <p>battle strength : {{ display['game'].current_player.battle_strength }}</p>
         <p>life : {{ display['life'] }}</p>
         <p>strength trophy : {{ display['strength_trophy'] }}</p>
 
     </div>
     {% endif %}
-    {% if display['game'].game_subphase == 'EWP_Choose' %}
+    <!-- BATTLE PVP -->
+    {% if display['game'].game_phase == 'EWP_Battle' %}
     <div style="border: 1px solid black; order:3">
         {% if display['game'].pvp_player != ""%}
         <h2 style="color: green">ATTACKED PLAYER : {{ display['game'].pvp_player.character.title }}</h2>
         {% endif %}
         <!--        <p id="cpp">current_player position: {{ display['position'].name }}</p>-->
         <p>strength : {{ display['game'].pvp_player.strength }}</p>
+        <p>battle strength : {{ display['game'].pvp_player.battle_strength }}</p>
         <p>life : {{ display['game'].pvp_player.life }}</p>
         <p>strength trophy : {{ display['strength_trophy'] }}</p>
     </div>
     {% endif %}
+
     {% if display['game'].game_subphase == 'EWP_Choose' %}
     <div style="order: 2">
-        <h1>Choose what you want to do?</h1>
-        <div>
-            <input type="submit" name='str_EWP' value='Use strength'/>
-            <input type="submit" name='craft_EWP' value='Use Magic'/>
-            <input type="submit" name='skill_EWP' value='Use Skill'/>
-        </div>
+        <form method="POST">
+            <h1>Choose what you want to do?</h1>
+            <div>
+                <input type="submit" name='strength_EWP' value='Use strength'/>
+                {% if display['game'].current_player.magic_fight == True %}
+                <input type="submit" name='craft_EWP' value='Use Magic'/>
+                {% endif %}
+                {% if (display['game'].current_player.skills_against_character)|length > 0 %}
+                <input type="submit" name='skill_EWP' value='Use Skill'/>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+    {% endif %}
+    {% if display['game'].game_subphase == 'EWP_Strength' %}
+    <div style="order: 2">
+        <form method="POST">
+            <h1>Please dice roll</h1>
+            <div>
+                <input type="submit" name='attacker_dice_roll' value='Dice roll for attacker player'/>
+                {% if display['game'].current_player.magic_fight == True %}
+                <input type="submit" name='defending_dice_roll' value='Dice roll for defending player'/>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+    {% endif %}
+    {% if display['game'].game_subphase == 'EWP_afterbattle' %}
+    <div style="order: 2">
+        <form method="POST">
+            {% if display['game'].pvp_winner != 'draw' %}
+            <h1>{{ display['game'].pvp_winner.character.title }} wins </h1>
+            <div>
+                <h3> What do you want to do with loser? </h3>
+                <input type="submit" name='take_life' value='take 1 point of life'/>
+                <input type="submit" name='take_gold' value='take 1 piece of gold'/>
+                <input type="submit" name='take_item' value='take 1 item'/>
+            </div>
+            {% endif %}
+            {% if display['game'].pvp_winner == 'draw' %}
+            <h1>{{ display['game'].pvp_winner }} wins </h1>
+            <input type="submit" name='end_turn' value='end turn'/>
+            {% endif %}
+
+
+        </form>
     </div>
     {% endif %}
 
 </div>
 
 <!-- GAME MAP -->
+{% if display['game'].game_phase != 'how_many_players' %}}
 <div style=" border :1px solid red">
-    <p> GAME MAP </p>
+    <p style="text-align: center"> GAME MAP </p>
     <div style="display:flex">
         {% for space in display['game_field'] %}
-        <div style="border :1px solid blue ; height : 200px; width:250px; display: flex; flex-direction: column; align-items:center">
+        <div style="border :1px solid blue ; height : 200px; width:250px; display: flex; flex-direction: column; align-items:center; width: 100%">
             <h5> {{space}}</h5>
             {% for player in display['players_position'] %}
             {% if display['players_position'][player] == space %}
@@ -210,7 +255,7 @@
         {% endfor %}
     </div>
 </div>
-
+{% endif %}
 <!-- GAME PHASE -->
 <div style="border: 1px solid orange">
     <h3> GAME PHASE</h3>

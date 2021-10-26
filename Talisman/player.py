@@ -23,7 +23,9 @@ class Player(Game):
         self.strength_trophy = []
         self.craft_trophy = []
         self.battle_spells = []
-        self.skills_against_character = []
+        self.magic_fight = True
+        self.skills_against_character = [2]
+        self.defence_items = ['armor']
 
         self.max_carry_items = 4
         self.max_spells = 0

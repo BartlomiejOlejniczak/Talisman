@@ -49,6 +49,10 @@ class Game:
         self.pvp_player = ''
         self.battle_modificator = 0
         self.enemy_strength = 0
+        self.battle_counter = 0
+        self.pvp_winner = ''
+        self.pvp_loser = ''
+
 
 
         self.backward_move_index = ''
@@ -177,7 +181,17 @@ class Game:
         self.display['battle_result'] = ''
         self.display['strength_trophy'] = ''
         self.current_player = self.players_in_game[self.cp_index]
-        self.pvp_player = ''
+        self.pvp_winner = ''
+        self.pvp_loser = ''
+
+
+        self.current_player.battle_modificator = 0
+        self.current_player.battle_strength = 0
+        if self.pvp_player != '':
+            self.pvp_player.battle_modifiactor = 0
+            self.pvp_player.battle_strength = 0
+        self.battle_counter = 0
+
         self.display_ref()
 
     def check_player_position(self):
@@ -196,8 +210,13 @@ class Game:
         else:
             return False
 
+    # def e_battle_strength(self):
+    #     self.battle_modificator = self.current_player.dice_roll_single()
+    #     self.enemy_strength = self.current_adv_card.strength + self.battle_modificator
+    #     self.display_ref()
+
     def e_battle_strength(self):
-        self.battle_modificator = self.current_player.dice_roll_single()
+        self.battle_modificator = self.dice_roll_single()
         self.enemy_strength = self.current_adv_card.strength + self.battle_modificator
         self.display_ref()
 
@@ -215,6 +234,8 @@ class Game:
             self.game_phase = 'EWE_after_battle'
             print(self.game_subphase)
             return self.game_subphase
+
+        # if self.game_subphase
 
     def draw_card(self):
         card = random.choice(self.adventure_cards)
@@ -243,6 +264,26 @@ class Game:
             if self.current_adv_card.type == 'enemy':
                 self.game_phase = 'EWE'
                 self.display_ref()
+
+    # ################# PVP ##############################
+    #
+    def pvp_result(self):
+        if self.current_player.battle_strength > self.pvp_player.battle_strength:
+            self.pvp_winner = self.current_player
+            self.pvp_loser != self.pvp_winner
+        elif self.current_player.battle_strength < self.pvp_player.battle_strength:
+            self.pvp_winner = self.pvp_player
+            self.pvp_loser != self.pvp_winner
+        else:
+            self.pvp_winner = 'draw'
+
+    def pvp_use_defence_item(self):
+        if self.pvp_loser.defence_items == 'armor':
+            if self.dice_roll_single() >= 4:
+                pass
+
+
+
 
 
 tal_game = Game()

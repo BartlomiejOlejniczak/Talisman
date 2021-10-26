@@ -140,7 +140,6 @@ def game():
                     # print(' yes_ETS')
                     tal_game.game_phase = 'EWP'
 
-
                 if request.form.get('no_ETS'):
                     print(' no_ETS')
                     tal_game.game_phase = 'ETS'
@@ -210,14 +209,16 @@ def game():
         # ECOUNTER WITH ANOTHER PLAYER
 
         if tal_game.game_phase == 'EWP':
+            # if tal_game.game_phase != 'EWP_Choose' or tal_game.game_phase != 'EWP_Skills' or tal_game.game_phase != 'EWP_strength' or tal_game.game_phase != 'EWP_craft':
             tal_game.game_subphase = 'EWP_Choose_Player_to_attack'
             if tal_game.game_subphase == 'EWP_Choose_Player_to_attack':
                 if request.form:
                     if list(request.form.keys())[0] != 'yes_ETS':
-                        for player in tal_game.players_in_game :
+                        for player in tal_game.players_in_game:
                             if str(player) == list(request.form.keys())[0]:
                                 tal_game.pvp_player = player
                                 print(f"PVP PLAYER : {player.character.title}")
+                                tal_game.game_phase = 'EWP_Battle'
                                 tal_game.game_subphase = 'EWP_Choose'
                             else:
                                 print('pvp false')
@@ -225,37 +226,40 @@ def game():
                     print('else')
 
 
-            # for p in tal_game.players_in_game:
-            #     print(f"gracze: {p} i ich pozycje {p.position}")
-            #
-            #     # print (f"pozycja {player.p.character.position} gracz: {p}" )
-            #     print(tal_game.display['position'])
+        if tal_game.game_phase == 'EWP_Battle':
+            print(f"skills against {len(tal_game.display['game'].current_player.skills_against_character)}")
 
-                # for key,  value in request.form.items():
-                #     print("key: {0}, value: {1}".format(key, value))
-                #     k = key
-                #     print(k)\
-                # f = request.form
-                # if f:
-                #     for key in f.keys():
-                #         for value in f.getlist(key):
-                #             print (key, ":", value)
+            if request.form.get('skill_EWP'):
+                tal_game.game_subphase = 'EWP_Skills'
+            if request.form.get('strength_EWP'):
+                tal_game.game_subphase = 'EWP_Strength'
+                print(f'{tal_game.game_subphase}')
+            if request.form.get('craft_EWP'):
+                tal_game.game_subphase = 'EWP_craft'
 
-                # f = request.form
+            if request.form.get('attacker_dice_roll'):
+                tal_game.current_player.p_battle_strength()
+                tal_game.battle_counter += 1
 
-                # for key in request.form.keys():
-                #     print(key)
-                #     for value in request.form.getlist(key):
-                #         print(key, ":", value)
-            # if request.form.get(' '):
-            #     tal_game.game_subphase = 'EWP_Choose'
-            if tal_game.game_subphase == 'EWP_Choose':
-                if request.form.get('skill_EWP'):
-                    tal_game.game_subphase = 'EWP_Skills'
-                if request.form.get('strength_EWP'):
-                    tal_game.game_subphase = 'EWP_strength'
-                if request.form.get('craft_EWP'):
-                    tal_game.game_subphase = 'EWP_craft'
+            if request.form.get('defending_dice_roll'):
+                tal_game.pvp_player.p_battle_strength()
+                tal_game.battle_counter += 1
+
+            if tal_game.battle_counter >= 2:
+                tal_game.game_subphase = 'EWP_afterbattle'
+                tal_game.pvp_result()
+
+            if tal_game.game_subphase == 'EWP_afterbattle':
+                if request.form.get('take_life'):
+                    if len(tal_game.pvp_loser.defence_items) > 0:
+                        tal_game.pvp_use_defence_item()
+                    else:
+                        tal_game.pvp_loser.life -= 1
+                    tal_game.end_turn()
+                if request.form.get('end_turn'):
+                    tal_game.end_turn()
+
+
 
 
         tal_game.display_ref()
