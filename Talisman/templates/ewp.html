@@ -1,0 +1,96 @@
+{% extends 'game2.html' %}
+{% block content %}
+<p>popopopopopopoppopopppopo</p>
+{% if display['game'].game_phase == 'EWP_Battle' %}
+    <div style="border: 1px solid black; order:3">
+        {% if display['game'].pvp_player != ""%}
+        <h2 style="color: green">ATTACKED PLAYER : {{ display['game'].pvp_player.character.title }}</h2>
+        {% endif %}
+        <!--        <p id="cpp">current_player position: {{ display['position'].name }}</p>-->
+        <p>strength : {{ display['game'].pvp_player.strength }}</p>
+        <p>battle strength : {{ display['game'].pvp_player.battle_strength }}</p>
+        <p>life : {{ display['game'].pvp_player.life }}</p>
+        <p>strength trophy : {{ display['strength_trophy'] }}</p>
+    </div>
+    {% endif %}
+
+    {% if display['game'].game_subphase == 'EWP_Choose' %}
+    <div style="order: 2">
+        <form method="POST">
+            <h1>Choose what you want to do?</h1>
+            <div>
+                <input type="submit" name='strength_EWP' value='Use strength'/>
+                {% if display['game'].current_player.magic_fight == True %}
+                <input type="submit" name='craft_EWP' value='Use Magic'/>
+                {% endif %}
+                {% if (display['game'].current_player.skills_against_character)|length > 0 %}
+                <input type="submit" name='skill_EWP' value='Use Skill'/>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+    {% endif %}
+    {% if display['game'].game_subphase == 'EWP_Strength' %}
+    <div style="order: 2">
+        <form method="POST">
+            <h1>Please dice roll</h1>
+            <div>
+                <input type="submit" name='attacker_dice_roll' value='Dice roll for attacker player'/>
+                {% if display['game'].current_player.magic_fight == True %}
+                <input type="submit" name='defending_dice_roll' value='Dice roll for defending player'/>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+    {% endif %}
+    {% if display['game'].game_subphase == 'EWP_afterbattle' %}
+    <div style="order: 2">
+        <form method="POST">
+            {% if display['game'].pvp_winner != 'draw' %}
+            <h1>{{ display['game'].pvp_winner.character.title }} wins </h1>
+            <div>
+                <h3> What do you want to do with loser? </h3>
+                <input type="submit" name='take_life' value='take 1 point of life'/>
+                <input type="submit" name='take_gold' value='take 1 piece of gold'/>
+                <input type="submit" name='take_item' value='take 1 item'/>
+            </div>
+            {% endif %}
+            {% if display['game'].pvp_winner == 'draw' %}
+            <h1>{{ display['game'].pvp_winner }} wins </h1>
+            <input type="submit" name='end_turn' value='end turn'/>
+            {% endif %}
+        </form>
+    </div>
+    {% endif %}
+    {% if display['game'].game_subphase == 'EWP_defence' %}
+    <div style="order: 2">
+        <form method="POST">
+            <div>
+                <h3>Roll dice for armour </h3>
+                <input type="submit" name='EWP_defence_armour' value='roll dice'/>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+    {% if display['game'].game_subphase == 'EWP_defence_true' %}
+    <div style="order: 2">
+        <form method="POST">
+            <div>
+                <h3>Your armour has protect you</h3>
+                <input type="submit" name='end_turn' value='end turn'/>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+    {% if display['game'].game_subphase == 'EWP_defence_false' %}
+    <div style="order: 2">
+        <form method="POST">
+            <div>
+                <h3>Your armour hasn't protect you. You lost 1 point of life</h3>
+                <input type="submit" name='end_turn' value='end turn'/>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+<p>popopopopopopoppopopppopo</p>
+{% endblock %}

@@ -230,8 +230,36 @@
             <h1>{{ display['game'].pvp_winner }} wins </h1>
             <input type="submit" name='end_turn' value='end turn'/>
             {% endif %}
-
-
+        </form>
+    </div>
+    {% endif %}
+    {% if display['game'].game_subphase == 'EWP_defence' %}
+    <div style="order: 2">
+        <form method="POST">
+            <div>
+                <h3>Roll dice for armour </h3>
+                <input type="submit" name='EWP_defence_armour' value='roll dice'/>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+    {% if display['game'].game_subphase == 'EWP_defence_true' %}
+    <div style="order: 2">
+        <form method="POST">
+            <div>
+                <h3>Your armour has protect you</h3>
+                <input type="submit" name='end_turn' value='end turn'/>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+    {% if display['game'].game_subphase == 'EWP_defence_false' %}
+    <div style="order: 2">
+        <form method="POST">
+            <div>
+                <h3>armour failed . {{ display['game'].pvp_loser.character.title }} lost 1 point of life</h3>
+                <input type="submit" name='end_turn' value='end {{ display["game"].current_player.character.title}} turn'/>
+            </div>
         </form>
     </div>
     {% endif %}

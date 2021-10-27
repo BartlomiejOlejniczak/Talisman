@@ -270,17 +270,42 @@ class Game:
     def pvp_result(self):
         if self.current_player.battle_strength > self.pvp_player.battle_strength:
             self.pvp_winner = self.current_player
-            self.pvp_loser != self.pvp_winner
+            self.pvp_loser = self.pvp_player
         elif self.current_player.battle_strength < self.pvp_player.battle_strength:
             self.pvp_winner = self.pvp_player
-            self.pvp_loser != self.pvp_winner
+            self.pvp_loser = self.current_player
         else:
             self.pvp_winner = 'draw'
 
     def pvp_use_defence_item(self):
-        if self.pvp_loser.defence_items == 'armor':
-            if self.dice_roll_single() >= 4:
-                pass
+        print("defence is used")
+        self.dice_roll_single()
+        for item in self.pvp_loser.defence_items:
+            if item == 'armor':
+                print('using armor')
+                if self.dice_roll_result >= 4:
+                    return True
+                else:
+                    print('life lost')
+                    self.pvp_loser.life -= 1
+                    return False
+            elif item == 'shield':
+                print('using shield')
+                if self.dice_roll_result >= 5:
+                    return True
+                else:
+                    print('life lost')
+                    self.pvp_loser.life -= 1
+                    return False
+            else:
+                print('using helmet')
+                if self.dice_roll_result >= 6:
+                    return True
+                else:
+                    print('life lost')
+                    self.pvp_loser.life -= 1
+                    return False
+        # self.end_turn()
 
 
 

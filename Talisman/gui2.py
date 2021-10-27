@@ -217,7 +217,7 @@ def game():
                         for player in tal_game.players_in_game:
                             if str(player) == list(request.form.keys())[0]:
                                 tal_game.pvp_player = player
-                                print(f"PVP PLAYER : {player.character.title}")
+                                # print(f"PVP PLAYER : {player.character.title}")
                                 tal_game.game_phase = 'EWP_Battle'
                                 tal_game.game_subphase = 'EWP_Choose'
                             else:
@@ -227,13 +227,12 @@ def game():
 
 
         if tal_game.game_phase == 'EWP_Battle':
-            print(f"skills against {len(tal_game.display['game'].current_player.skills_against_character)}")
+            # print(f"skills against {len(tal_game.display['game'].current_player.skills_against_character)}")
 
             if request.form.get('skill_EWP'):
                 tal_game.game_subphase = 'EWP_Skills'
             if request.form.get('strength_EWP'):
                 tal_game.game_subphase = 'EWP_Strength'
-                print(f'{tal_game.game_subphase}')
             if request.form.get('craft_EWP'):
                 tal_game.game_subphase = 'EWP_craft'
 
@@ -250,12 +249,25 @@ def game():
                 tal_game.pvp_result()
 
             if tal_game.game_subphase == 'EWP_afterbattle':
+                tal_game.battle_counter = 0
                 if request.form.get('take_life'):
                     if len(tal_game.pvp_loser.defence_items) > 0:
-                        tal_game.pvp_use_defence_item()
+                        tal_game.game_subphase = 'EWP_defence'
                     else:
+                        print(f'life {tal_game.pvp_loser.life}')
                         tal_game.pvp_loser.life -= 1
+                        tal_game.end_turn()
+                if request.form.get('end_turn'):
                     tal_game.end_turn()
+
+            if tal_game.game_subphase == 'EWP_defence':
+                if request.form.get('EWP_defence_armour'):
+                    if tal_game.pvp_use_defence_item() == True:
+                        tal_game.game_subphase = 'EWP_defence_true'
+                    if tal_game.pvp_use_defence_item() == False:
+                        tal_game.game_subphase = 'EWP_defence_false'
+
+            if tal_game.game_subphase == 'EWP_defence_true' or tal_game.game_subphase == 'EWP_defence_false':
                 if request.form.get('end_turn'):
                     tal_game.end_turn()
 
