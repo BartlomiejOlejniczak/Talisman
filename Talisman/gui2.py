@@ -257,6 +257,10 @@ def game():
                         print(f'life {tal_game.pvp_loser.life}')
                         tal_game.pvp_loser.life -= 1
                         tal_game.end_turn()
+                elif request.form.get('take_gold'):
+                    tal_game.pvp_loser.gold -= 1
+                    tal_game.pvp_winner.gold += 1
+                    tal_game.end_turn()
                 if request.form.get('end_turn'):
                     tal_game.end_turn()
 

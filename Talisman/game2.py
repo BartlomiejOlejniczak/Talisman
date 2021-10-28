@@ -64,7 +64,7 @@ class Game:
                         'move_forward': {'name': '',
                                          'cards_to_draw': ''},
                         'card': '', 'enemy_strength': '',
-                        'player_strength': '', 'battle_result': '', 'strength_trophy': '', 'life': '',
+                        'player_strength': '', 'battle_result': '', 'life': '',
                         'players_position': {}, 'bmi': self.backward_move_index, 'fmi': self.forward_move_index,
                         'game_field': cards.ow_game_field, 'players_position_fwd': {}, 'players_position_bkw': {},
                         'players_in_game': self.players_in_game, 'game': self}
@@ -91,8 +91,8 @@ class Game:
         if self.current_player.life != '':
             self.display['life'] = self.current_player.life
 
-        if len(self.current_player.strength_trophy) > 0:
-            self.display['strength_trophy'] = self.current_player.strength_trophy
+        # if len(self.current_player.strength_trophy) > 0:
+        #     self.display['strength_trophy'] = self.current_player.strength_trophy
 
         try:
             for player in self.players_in_game:
@@ -268,10 +268,10 @@ class Game:
     # ################# PVP ##############################
     #
     def pvp_result(self):
-        if self.current_player.battle_strength > self.pvp_player.battle_strength:
+        if self.current_player.battle_strength  > self.pvp_player.battle_strength or self.current_player.battle_craft  > self.pvp_player.battle_craft:
             self.pvp_winner = self.current_player
             self.pvp_loser = self.pvp_player
-        elif self.current_player.battle_strength < self.pvp_player.battle_strength:
+        elif self.current_player.battle_strength < self.pvp_player.battle_strength or self.current_player.battle_craft < self.pvp_player.battle_craft :
             self.pvp_winner = self.pvp_player
             self.pvp_loser = self.current_player
         else:
