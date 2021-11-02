@@ -5,8 +5,6 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 
-
-
 from functools import wraps
 
 app = Flask(__name__)
@@ -31,7 +29,6 @@ def load_user(user_id):
 #     return App.render(render_template('index2.html'))
 
 
-
 class Outer_world(db.Model, Base):
     __tablename__ = 'outer_world'
     id = db.Column(db.Integer, primary_key=True)
@@ -46,6 +43,9 @@ class AdventureCard(db.Model, Base):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(250), nullable=False)
     type = db.Column(db.String(250), nullable=False)
+    is_magic = db.Column(db.Boolean, nullable=True)
+    is_weapon = db.Column(db.Boolean, nullable=True)
+    is_defence = db.Column(db.Boolean, nullable=True)
     meet_number = db.Column(db.Integer, nullable=False)
     enemy_type = db.Column(db.String(250), nullable=True)
     is_special = db.Column(db.Boolean, nullable=True)
@@ -53,10 +53,19 @@ class AdventureCard(db.Model, Base):
     craft = db.Column(db.Integer, nullable=True)
     description = db.Column(db.String(250), nullable=True)
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.position = ''
-        self.tokens = ''
+        self.is_magic = False
+        self.is_weapon = False
+        self.is_defence = False
+        self.is_special = False
 
+        for key, value in list(kwargs.items()):
+            setattr(self, key, value)
+
+
+# db.create_all()
+# db.session.commit()
 
 class Character(db.Model, Base):
     __tablename__ = 'character'
@@ -128,16 +137,84 @@ def admin_only(f):
     return decorated_function
 
 
-# db.create_all()
+mummy = AdventureCard(title='mummy',
+                      craft=2,
+                      meet_number=3,
+                      type='enemy',
+                      enemy_type='ghost',
+                      is_special=True)
+
+# db.session.add(mummy)
+
+bane = AdventureCard(title='bane',
+                     craft=3,
+                     meet_number=3,
+                     type='enemy',
+                     enemy_type='ghost',
+                     is_special=True)
+
+# db.session.add(bane)
+
+ogre = AdventureCard(title='ogre',
+                     strength=5,
+                     meet_number=2,
+                     type='enemy',
+                     enemy_type='monster')
+
+# db.session.add(ogre)
 #
-# new_ac = AdventureCard()
-# new_ac.title = 'bear'
-# new_ac.strength = 3
-# new_ac.meet_number = 2
-# new_ac.type = 'enemy'
-# new_ac.enemy_type = 'animal'
-# db.session.add(new_ac)
-# db.session.commit()
+bear = AdventureCard(title='bear',
+                     strength=3,
+                     meet_number=2,
+                     type='enemy',
+                     enemy_type='animal')
+
+# db.session.add(bear)
+# db.session.add(bear)
+# db.session.add(bear)
+
+robber = AdventureCard(title='robber',
+                       strength=5,
+                       meet_number=2,
+                       type='enemy',
+                       enemy_type='monster',
+                       is_special=True)
+
+# db.session.add(robber)
+
+axe = AdventureCard(title='axe',
+                    meet_number=5,
+                    type='item',
+                    is_weapon=True)
+
+# db.session.add(axe)
+
+armor = AdventureCard(title='armor',
+                      meet_number=5,
+                      type='item',
+                      is_defence=True)
+
+# db.session.add(armor)
+
+holy_grail = AdventureCard(title='holy_grail',
+                           meet_number=5,
+                           type='item',
+                           is_magic=True,
+                           is_special=True)
+
+# db.session.add(holy_grail)
+
+
+ring = AdventureCard(title='ring',
+                           meet_number=5,
+                           type='item',
+                           is_magic=True,
+                           is_special=True)
+
+# db.session.add(ring)
+#
+
+
 
 # new_ac = AdventureCard()
 
@@ -147,4 +224,5 @@ def admin_only(f):
 # new_field.special = True
 #
 # db.session.add(new_field)
+# db.session.commit()
 # db.session.commit()

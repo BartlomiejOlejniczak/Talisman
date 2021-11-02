@@ -22,16 +22,20 @@ class Player(Game):
         # self.throw = ''
 
         self.battle_modificator = 0
-        self.battle_strength = 0
-        self.battle_craft = 0
+        self.battle_strength = self.strength
+        self.battle_craft = self.craft
         self.strength_trophy = []
         self.craft_trophy = []
         self.battle_spells = []
+        self.spells = []
         self.magic_fight = True
         self.skills_against_character = [2]
 
         self.defence_items = ['armor']
-        self.all_items = [self.defence_items]
+        self.attack_items = ['axe']
+        self.items = []
+        self.all_items = [self.defence_items + self.attack_items]
+
 
         self.max_carry_items = 4
         self.max_spells = 0
@@ -46,7 +50,7 @@ class Player(Game):
         self.character = char
         self.strength = char.strenght
         self.life = char.life
-        # self.gold = char.gold
+        self.gold = char.gold
         self.fate = char.fate
         self.craft = char.craft
         for space in cards.ow_game_field:
@@ -67,16 +71,22 @@ class Player(Game):
 
     def move_backward(self, dice_roll_result):
         self.position = cards.ow_game_field[tal_game.backward_move_index]
-
         return self.position
 
-    def p_battle_strength(self):
-        if tal_game.game_subphase == 'EWP_Strength':
+    def p_battle_power(self):
+        if tal_game.game_subphase == 'EWP_Strength' or (tal_game.game_subphase == 'EWE_Battle' and tal_game.current_adv_card.strength != None):
             self.battle_modificator = self.dice_roll_single()
             self.battle_strength = self.strength + self.battle_modificator
-        if tal_game.game_subphase == 'EWP_craft':
+            for item in self.items:
+                if item.is_weapon == True:
+                    self.battle_strength += 1
+        if tal_game.game_subphase == 'EWP_craft' or (tal_game.game_subphase == 'EWE_Battle' and tal_game.current_adv_card.strength == None):
             self.battle_modificator = self.dice_roll_single()
             self.battle_craft = self.craft + self.battle_modificator
+
+
+        # if tal_game.game_subphase == 'EWE_Battle' and tal_game.current_adv_card.strength != None:
+
 
 
 

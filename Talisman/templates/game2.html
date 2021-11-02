@@ -105,8 +105,14 @@
             <div>
                 {% if display['game'].game_subphase == 'EWE_Battle' %}
                 <h1>Battle with {{ display['card'].title }}</h1>
+                {% if display['game'].current_adv_card.strength != None %}
                 <h2>Enemy strength {{ display['enemy_strength'] }}</h2>
                 <h2 style="color: red">Player strength {{ display['player_strength'] }}</h2>
+                {% endif %}
+                {% if display['game'].current_adv_card.strength == None %}
+                <h2>Enemy craft {{ display['game'].enemy_power }}</h2>
+                <h2 style="color: red">Player craft {{ display['game'].current_player.battle_craft }}</h2>
+                {% endif %}
                 {% if display['battle_result'] == '' %}
                 <input type="submit" name='dice_roll_enemy' value='dice roll for enemy'/>
                 <input type="submit" name='dice_roll_character' value='dice roll for character'/>
@@ -178,6 +184,7 @@
         {% endif %}
         <p>life : {{ display['life'] }}</p>
         <p>gold: {{ display['game'].current_player.gold }}</p>
+        <p>items:{% for item in display['game'].current_player.items %} {{ item.title }} {% endfor %}</p>
         {% if (display['game'].current_player.strength_trophy)|length > 0 %}
         <p>strength trophy : {{ display['game'].current_player.strength_trophy }}</p>
         {% endif %}

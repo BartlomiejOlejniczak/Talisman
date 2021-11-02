@@ -165,7 +165,9 @@ def game():
                                 tal_game.game_subphase = 'EWE_Spells'
                             else:
                                 tal_game.game_subphase = 'EWE_Battle'
-
+                        elif tal_game.current_adv_card.type == 'item':
+                            tal_game.current_player.items.append(tal_game.current_adv_card)
+                            tal_game.end_turn()
                 # tal_game.display_ref()
 
 
@@ -197,12 +199,12 @@ def game():
             if tal_game.game_subphase == 'EWE_Battle':
 
                 if request.form.get('dice_roll_enemy'):
-                    tal_game.e_battle_strength()
+                    tal_game.e_battle_power()
 
                 if request.form.get('dice_roll_character'):
-                    tal_game.current_player.p_battle_strength()
+                    tal_game.current_player.p_battle_power()
 
-                if tal_game.current_player.battle_strength > tal_game.current_player.strength and tal_game.battle_modificator > 0:
+                if (tal_game.current_player.battle_strength > tal_game.current_player.strength) or (tal_game.current_player.battle_craft > tal_game.current_player.craft) and tal_game.battle_modificator > 0:
                     tal_game.ecounter_with_enemy()
             tal_game.display_ref()
 
@@ -225,7 +227,6 @@ def game():
                 else:
                     print('else')
 
-
         if tal_game.game_phase == 'EWP_Battle':
             # print(f"skills against {len(tal_game.display['game'].current_player.skills_against_character)}")
 
@@ -233,15 +234,17 @@ def game():
                 tal_game.game_subphase = 'EWP_Skills'
             if request.form.get('strength_EWP'):
                 tal_game.game_subphase = 'EWP_Strength'
+                tal_game.battle_type = 'strength'
             if request.form.get('craft_EWP'):
                 tal_game.game_subphase = 'EWP_craft'
+                tal_game.battle_type = 'craft'
 
             if request.form.get('attacker_dice_roll'):
-                tal_game.current_player.p_battle_strength()
+                tal_game.current_player.p_battle_power()
                 tal_game.battle_counter += 1
 
             if request.form.get('defending_dice_roll'):
-                tal_game.pvp_player.p_battle_strength()
+                tal_game.pvp_player.p_battle_power()
                 tal_game.battle_counter += 1
 
             if tal_game.battle_counter >= 2:
@@ -251,7 +254,7 @@ def game():
             if tal_game.game_subphase == 'EWP_afterbattle':
                 tal_game.battle_counter = 0
                 if request.form.get('take_life'):
-                    if len(tal_game.pvp_loser.defence_items) > 0:
+                    if len(tal_game.pvp_loser.defence_items) > 0 and tal_game.battle_type != 'craft':
                         tal_game.game_subphase = 'EWP_defence'
                     else:
                         print(f'life {tal_game.pvp_loser.life}')
@@ -274,9 +277,6 @@ def game():
             if tal_game.game_subphase == 'EWP_defence_true' or tal_game.game_subphase == 'EWP_defence_false':
                 if request.form.get('end_turn'):
                     tal_game.end_turn()
-
-
-
 
         tal_game.display_ref()
 
