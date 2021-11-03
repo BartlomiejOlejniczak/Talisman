@@ -27,7 +27,7 @@
                 {% endif %}
             </div>
 
-
+<!--    MOVEMENTS CARDS  -->
             <div>
                 {% if display['game'].game_phase == 'movement_dice_roll' and display['game'].game_subphase != 'movement'
                 %}
@@ -43,7 +43,8 @@
                             <h2>{{ display['move_backward']['name'] }} cards to draw: {{
                                 display['move_backward']['cards_to_draw']
                                 }}</h2>
-                            <h2>{{ display['game_field'][ display['bmi']] }}</h2>
+                            <h2>{{ display['game_field'][ display['bmi']].name }}</h2>
+
                             {% for player in display['game'].players_in_game %}
                             {% if player.position == display['game_field'][ display['bmi']] %}
                             <h6>{{ player.character.title }} </h6>
@@ -55,7 +56,7 @@
                             <h2>{{ display['move_forward']['name'] }} cards to draw: {{
                                 display['move_forward']['cards_to_draw']
                                 }}</h2>
-                            <h2> {{ display['game_field'][ display['fmi']] }}</h2>
+                            <h2> {{ display['game_field'][ display['fmi']].name }}</h2>
                             {% for player in display['game'].players_in_game %}
                             {% if player.position == display['game_field'][ display['fmi']] %}
                             <h6>{{ player.character.title }} </h6>
@@ -68,7 +69,7 @@
                 </div>
                 {% endif %}
             </div>
-
+<!---->
 
             <div>
                 {% if display['game'].game_phase == 'ETS' and display['game'].game_subphase != 'ETS_draw' %}
@@ -174,19 +175,25 @@
         <h2 style="color: green">CURRENT PLAYER : {{ display['game'].current_player.character.title }} </h2>
         <p id="cpp">current_player position: {{ display['position'] }}</p>
 
+        <p>base strength : {{ display['game'].current_player.base_strength }}</p>
         <p>strength : {{ display['game'].current_player.strength }}</p>
         <p>craft : {{ display['game'].current_player.craft }}</p>
+        <p>base craft : {{ display['game'].current_player.base_craft }}</p>
         {% if display['game'].game_subphase == 'EWP_Strength '%}
         <p>battle strength : {{ display['game'].current_player.battle_strength }}</p>
         {% endif %}
         {% if display['game'].game_subphase == 'EWP_craft' %}
         <p>battle craft : {{ display['game'].current_player.battle_craft }}</p>
+        <p>base strength : {{ display['game'].current_player.base_strength }}</p>
         {% endif %}
         <p>life : {{ display['life'] }}</p>
         <p>gold: {{ display['game'].current_player.gold }}</p>
         <p>items:{% for item in display['game'].current_player.items %} {{ item.title }} {% endfor %}</p>
         {% if (display['game'].current_player.strength_trophy)|length > 0 %}
         <p>strength trophy : {{ display['game'].current_player.strength_trophy }}</p>
+        {% endif %}
+        {% if (display['game'].current_player.craft_trophy)|length > 0 %}
+        <p>craft trophy : {{ display['game'].current_player.craft_trophy }}</p>
         {% endif %}
 
     </div>
@@ -302,12 +309,17 @@
     <div style="display:flex">
         {% for space in display['game_field'] %}
         <div style="border :1px solid blue ; height : 200px; width:250px; display: flex; flex-direction: column; align-items:center; width: 100%">
-            <h5> {{space}}</h5>
+            <h5> {{ space.name }}</h5>
             {% for player in display['players_position'] %}
-            {% if display['players_position'][player] == space %}
-            <h6>{{ player.character.title }}</h6>
-            {% endif %}
+                {% if display['players_position'][player] == space %}
+                    <h6>{{ player.character.title }}</h6>
+                {% endif %}
             {% endfor %}
+            {% for card in display['game'].cards_on_map %}
+                    {% if card.position == space %}
+                    <h6 style="color: red">{{ card.title }}</h6>
+                    {% endif %}
+                {% endfor %}
         </div>
         {% endfor %}
     </div>

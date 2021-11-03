@@ -43,7 +43,7 @@ class Game:
 
         self.adventure_cards = AdventureCard.query.all()
         self.used_adventures_cards = []
-        self.current_adventures_cards = []
+        self.cards_on_map = []
         self.current_adv_card = ''
 
         self.current_player = ''
@@ -75,8 +75,8 @@ class Game:
         self.display_ref()
 
     def dice_roll_single(self):
-        # result = random.randint(1, 6)
-        result = 1
+        result = random.randint(1, 6)
+        # result = 1
         self.dice_roll_result = result
         print(f'wynik rzuty kostka {self.dice_roll_result}')
         # self.display_ref()
@@ -87,6 +87,8 @@ class Game:
         self.dice_roll_result = result
         self.display_ref()
         return result
+
+
 
     def end_turn(self):
         if self.cp_index + 1 >= len(self.players_in_game):
@@ -108,9 +110,11 @@ class Game:
 
         self.current_player.battle_modificator = 0
         self.current_player.battle_strength = 0
+        self.current_player.battle_craft = 0
         if self.pvp_player != '':
             self.pvp_player.battle_modifiactor = 0
             self.pvp_player.battle_strength = 0
+            self.pvp_player.battle_craft = 0
         self.battle_counter = 0
 
         self.display_ref()
@@ -136,6 +140,8 @@ class Game:
     #     self.enemy_strength = self.current_adv_card.strength + self.battle_modificator
     #     self.display_ref()
 
+######### ECOUNTER WITH ENEMY ###################
+
     def e_battle_power(self):
         self.battle_modificator = self.dice_roll_single()
 
@@ -145,34 +151,40 @@ class Game:
             print('craft power')
             self.enemy_power = self.current_adv_card.craft + self.battle_modificator
             print(f'{self.enemy_power}')
+        self.battle_counter += 1
         self.display_ref()
 
     def ecounter_with_enemy(self):
         if self.game_subphase != 'EWE_after_battle':
             if self.current_adv_card.strength != None:
                 if self.current_player.battle_strength > self.enemy_power:
-                    self.current_player.strength_trophy.append(self.current_adv_card)
+                    self.move_card('EWE')
                     self.display['battle_result'] = 'player_won'
 
                 elif self.current_player.battle_strength < self.enemy_power:
                     self.current_player.life -= 1
+                    self.leave_card_on_map()
                     self.display['battle_result'] = 'player_lost'
 
                 else:
+                    self.leave_card_on_map()
                     self.display['battle_result'] = 'draw'
 
             else:
                 if self.current_player.battle_craft > self.enemy_power:
-                    self.current_player.craft_trophy.append(self.current_adv_card)
+                    self.move_card('EWE')
                     self.display['battle_result'] = 'player_won'
 
                 elif self.current_player.battle_craft < self.enemy_power:
+                    self.leave_card_on_map()
                     self.current_player.life -= 1
                     self.display['battle_result'] = 'player_lost'
 
                 else:
+                    self.leave_card_on_map()
                     self.display['battle_result'] = 'draw'
-                    self.current_adv_card.position = self.current_player.position
+
+                    
 
             self.game_phase = 'EWE_after_battle'
             return self.game_subphase
@@ -187,9 +199,8 @@ class Game:
     ############# EWE ######################################
 
     def ewe_evade(self):
-        while self.game_subphase == 'EWE_Evade':
-            if request.form.get('yes_EWE_Evade'):
-                print('bbbb')
+        self.leave_card_on_map()
+        self.end_turn()
 
     ########## ETS - ECOUNTER THE SPACE #####################################
 
@@ -208,6 +219,32 @@ class Game:
             if self.current_adv_card.type == 'enemy':
                 self.game_phase = 'EWE'
                 self.display_ref()
+
+    def check_item_carry(self):
+        item = self.current_adv_card
+        if len(self.current_player.items) < self.current_player.max_carry_items:
+            self.current_player.items.append(item)
+        else:
+            self.game_subphase = 'ETS_drop_item'
+
+    def leave_card_on_map(self):
+        if self.current_adv_card not in self.cards_on_map:
+            self.current_adv_card.position = self.current_player.position
+            self.cards_on_map.append(self.current_adv_card)
+
+    def move_card(self, *args):
+        print('moving card pos')
+        if self.current_adv_card in self.cards_on_map:
+            self.cards_on_map.remove(self.current_adv_card)
+        if 'EWE':
+            if self.current_adv_card.craft != None:
+                self.current_player.craft_trophy.append(self.current_adv_card)
+            else:
+                self.current_player.strength_trophy.append(self.current_adv_card)
+
+
+
+
 
     # ################# PVP ##############################
     #
@@ -230,7 +267,7 @@ class Game:
                 if self.dice_roll_result >= 4:
                     return True
                 else:
-                    print('life lost')
+                    # print('life lost')
                     self.pvp_loser.life -= 1
                     return False
             elif item == 'shield':
@@ -238,7 +275,7 @@ class Game:
                 if self.dice_roll_result >= 5:
                     return True
                 else:
-                    print('life lost')
+                    # print('life lost')
                     self.pvp_loser.life -= 1
                     return False
             else:
@@ -246,7 +283,7 @@ class Game:
                 if self.dice_roll_result >= 6:
                     return True
                 else:
-                    print('life lost')
+                    # print('life lost')
                     self.pvp_loser.life -= 1
                     return False
         # self.end_turn()
@@ -254,7 +291,13 @@ class Game:
     ########## DISPLAY ##############
 
     def display_ref(self):
-        print(f'current player items: {self.current_player.items}')
+        for player in self.players_in_game:
+            player.update_item_stats()
+        # print(f'karty na mapie: {self.cards_on_map}')
+        # for card in self.cards_on_map:
+        #     print(f'karta{card.title} \n pozycja: {card.position}')
+        # print(f'current player items: {self.current_player.items}')
+
         self.display['game'] = self
         self.display['players_in_game'] = self.players_in_game
         self.display['position'] = self.current_player.position
@@ -335,6 +378,22 @@ class Game:
                     self.display['players_position'][player] = player.position
             except:
                 pass
+
+    # def update_item_stats(self):
+    #     for player in self.players_in_game:
+    #         for item in player.items:
+    #             if item.is_special:
+    #                 if item.title == 'ring':
+    #                     print(player)
+    #                     print('ring')
+    #                     player.strength = player.base_strength + 1
+    #                     player.craft = player.base_craft + 1
+    #                     print(player.strength)
+    #                 if item.title == 'holy_grail':
+    #                     print(player)
+    #                     print('holy_grail')
+    #                     player.craft = player.base_craft + 1
+    #                     print(player.craft)
 
 
 tal_game = Game()

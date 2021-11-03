@@ -150,6 +150,14 @@ def game():
         if tal_game.game_phase == 'ETS':
             # check if space has special abilites ex. Town
             if not tal_game.check_if_space_is_special():
+
+                # check if card is on space
+                for card in tal_game.cards_on_map:
+                    if tal_game.current_player.position == card.position:
+                        tal_game.current_adv_card = card
+                        tal_game.game_subphase = 'ETS_draw'
+
+
                 # drawing a card
                 if request.form.get('draw'):
                     tal_game.draw_card()
@@ -166,8 +174,15 @@ def game():
                             else:
                                 tal_game.game_subphase = 'EWE_Battle'
                         elif tal_game.current_adv_card.type == 'item':
-                            tal_game.current_player.items.append(tal_game.current_adv_card)
+                            tal_game.check_item_carry()
                             tal_game.end_turn()
+                            # if len(tal_game.current_player.items) < tal_game.current_player.max_carry_items:
+                            #     tal_game.current_player.items.append(tal_game.current_adv_card)
+                            #     tal_game.end_turn()
+                            # else:
+                            #     tal_game.game_subphase = 'ETS_drop_item'
+
+
                 # tal_game.display_ref()
 
 
@@ -182,6 +197,7 @@ def game():
 
             if tal_game.game_subphase == 'EWE_Evade':
                 if request.form.get('yes_EWE_Evade'):
+                    tal_game.leave_card_on_map()
                     tal_game.end_turn()
                 if request.form.get('no_EWE_Evade'):
 
@@ -204,7 +220,7 @@ def game():
                 if request.form.get('dice_roll_character'):
                     tal_game.current_player.p_battle_power()
 
-                if (tal_game.current_player.battle_strength > tal_game.current_player.strength) or (tal_game.current_player.battle_craft > tal_game.current_player.craft) and tal_game.battle_modificator > 0:
+                if tal_game.battle_counter == 2:
                     tal_game.ecounter_with_enemy()
             tal_game.display_ref()
 

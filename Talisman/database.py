@@ -64,6 +64,11 @@ class AdventureCard(db.Model, Base):
             setattr(self, key, value)
 
 
+
+
+
+
+
 # db.create_all()
 # db.session.commit()
 
@@ -185,7 +190,8 @@ robber = AdventureCard(title='robber',
 axe = AdventureCard(title='axe',
                     meet_number=5,
                     type='item',
-                    is_weapon=True)
+                    is_weapon=True,
+                    is_special=True)
 
 # db.session.add(axe)
 
